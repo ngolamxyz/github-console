@@ -3,6 +3,9 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import express from 'express';
 import { renderToString } from 'react-dom/server';
+let passport = require('passport');
+let session = require('express-session');
+let GitHubStrategy = require('passport-github2').Strategy;
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
@@ -48,7 +51,50 @@ const server = express();
 server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
-  .get('/*', (req, res) => {
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "http://127.0.0.1:3000/auth/github/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    process.nextTick(function () {
+      return done(null, profile);
+    });
+  }
+));
+
+server.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+server.use(passport.initialize());
+server.use(passport.session());
+
+server.get('/', ensureAuthenticated)
+
+server.get('/auth/github',
+  passport.authenticate('github', { scope: [ 'user:email' ] }),
+  function(req, res){
+  });
+
+server.get('/auth/github/callback',
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/auth/github')
+}
+
+server.get('/*', ensureAuthenticated, (req, res) => {
     const {context, html} = renderApp(req, res);
     if (context.url) {
       res.redirect(context.url);
@@ -56,5 +102,6 @@ server
       res.status(200).send(html);
     }
   });
+
 
 export default server;
