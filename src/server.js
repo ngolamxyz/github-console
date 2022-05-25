@@ -1,8 +1,13 @@
 import App from './App';
 import React from 'react';
+import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import express from 'express';
 import { renderToString } from 'react-dom/server';
+import qs from 'qs';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { fetchUsers } from './api/users';
+import userReducer from './reducers/userReducer'
 let passport = require('passport');
 let session = require('express-session');
 let GitHubStrategy = require('passport-github2').Strategy;
@@ -23,13 +28,39 @@ const jsScriptTagsFromAssets = (assets, entrypoint, ...extra) => {
   ).join('') : '' : '';
 };
 
-export const renderApp = (req, res) => {
+export const renderApp = async (req, res) => {
+  const params = qs.parse(req.query);
+  const searchQuery = params.q || ""
+  let apiResult = {
+    total_count: 0,
+    incomplete_results: false, 
+    items: [],
+    search_query: searchQuery
+  }
+
+  if (searchQuery) {
+    apiResult = await fetchUsers(searchQuery, req.user)
+  }
   const context = {};
+  context.session = req.session
+
+  const preloadedState = { users: { ...apiResult, search_query: searchQuery } }
+
+  const store = configureStore({
+    reducer: combineReducers({
+      users: userReducer
+    }),
+    preloadedState: preloadedState
+  })
+
   const markup = renderToString(
     <StaticRouter context={context} location={req.url}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </StaticRouter>
   );
+  const finalState = store.getState();
   const html = `<!doctype html>
   <html lang="">
   <head>
@@ -42,6 +73,13 @@ export const renderApp = (req, res) => {
   <body>
       <div id="root">${markup}</div>
       ${jsScriptTagsFromAssets(assets, 'client', 'defer', 'crossorigin')}
+      <script>
+          window.__GITHUB_TOKEN__ = "${req.user}"
+          window.__PRELOADED_STATE__ = ${JSON.stringify(finalState).replace(
+            /</g,
+            '\\u003c'
+          )}
+      </script>
   </body>
 </html>`
   return {context, html};
@@ -67,7 +105,7 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      return done(null, profile);
+      return done(null, accessToken);
     });
   }
 ));
@@ -89,13 +127,8 @@ server.get('/auth/github/callback',
     res.redirect('/');
   });
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/auth/github')
-}
-
-server.get('/*', ensureAuthenticated, (req, res) => {
-    const {context, html} = renderApp(req, res);
+server.get('/*', ensureAuthenticated, async (req, res) => {
+    const { context, html} = await renderApp(req, res);
     if (context.url) {
       res.redirect(context.url);
     } else {
@@ -103,5 +136,9 @@ server.get('/*', ensureAuthenticated, (req, res) => {
     }
   });
 
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/auth/github')
+}
 
 export default server;

@@ -1,33 +1,33 @@
-import React from 'react';
-import logo from './react.svg';
+import React, { useEffect } from 'react';
 import './Home.css';
+import TextField from '@mui/material/TextField';
+import ResultList from './components/ResultList';
+import { useDispatch, useSelector } from 'react-redux';
+import { debounce } from '@mui/material';
+import { queryUsers, updateQuery } from './reducers/userReducer';
 
-class Home extends React.Component {
-  render() {
-    return (
-      <div className="Home">
-        <div className="Home-header">
-          <img src={logo} className="Home-logo" alt="logo" />
-          <h2>Welcome to Razzle</h2>
-        </div>
-        <p className="Home-intro">
-          To get started, edit <code>src/App.js</code> or{' '}
-          <code>src/Home.js</code> and save to reload.
-        </p>
-        <ul className="Home-resources">
-          <li>
-            <a href="https://github.com/jaredpalmer/razzle">Docs</a>
-          </li>
-          <li>
-            <a href="https://github.com/jaredpalmer/razzle/issues">Issues</a>
-          </li>
-          <li>
-            <a href="https://palmer.chat">Community Slack</a>
-          </li>
-        </ul>
-      </div>
-    );
+export default function Home() {
+  const users = useSelector(state => state.users)
+  const dispatch = useDispatch()
+  const handleSearch = (event) => {
+    const queryValue = event.target.value;
+    dispatch(queryUsers(queryValue))
+    // reloadPage(queryValue)
   }
+  // useEffect(() => {
+  //   const ele = document.getElementById("searchbox")
+  //   ele.setSelectionRange(-1, -1)
+  // })
+  const reloadPage = debounce((query) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('q', query);
+    window.location.search = urlParams;
+  })
+  
+  return (
+    <div className="Home">
+      <TextField id="searchbox" onChange={handleSearch} value={users.search_query} type="text" autoFocus />
+      <ResultList></ResultList>
+    </div>
+  );
 }
-
-export default Home;
