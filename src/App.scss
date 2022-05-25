@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'Jost';
+  src:
+    url('../public/fonts/Jost-VariableFont_wght.ttf'),
+    url('../public/fonts/Jost-Italic-VariableFont_wght.ttf');
+}
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'Jost';
+  box-sizing: border-box;
+  padding: 3rem;
+}
