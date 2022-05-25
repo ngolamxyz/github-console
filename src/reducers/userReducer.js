@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { createAction } from '@reduxjs/toolkit';
-import { fetchUsers } from '../api/users';
 
 export const updateQuery = createAction('user/updateQuery');
 
