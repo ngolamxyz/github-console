@@ -1,15 +1,41 @@
+import styled from "styled-components"
+
+const StyledFooter = styled.div `
+    padding: 1.6rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.05);
+    .action {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        span {
+            display: block;
+        }
+    }
+    svg {
+        width: 2rem;
+        height: 2rem;
+    }
+`
 export default function Footer() {
     return (
-        <>
-            <svg>
-                <use xlinkHref="/imgs/sprite.svg#lookup-icon"/>
-            </svg>
-            <span>Search</span>
-            <svg>
-                <use xlinkHref="/imgs/sprite.svg#liked-icon"/>
-            </svg>
-            <span>Favorite</span>
-
-        </>
+        <StyledFooter>
+            <div className="action">
+                <svg>
+                    <use xlinkHref="/imgs/sprite.svg#lookup-icon"/>
+                </svg>
+                <span>Search</span>
+            </div>
+            <div className="action">
+                <svg>
+                    <use xlinkHref="/imgs/sprite.svg#liked-icon"/>
+                </svg>
+                <span>Favorite</span>
+            </div>
+        </StyledFooter>
     )
 }

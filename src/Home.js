@@ -11,18 +11,42 @@ import styled from 'styled-components';
 
 const Container = styled.div `
   display: flex;
+  height: 100vh;
+  justify-content: space-between;
   flex-direction: column;
-  margin: 0 5rem;
+  .head {
+    padding: 1rem 4rem;
+  }
 `
 const SearchField = styled.div `
   display: flex;
   justify-content: center;
   > div {
     width: 100%;
-    padding: 1rem;
+    padding: 1rem 1rem 1rem 0;
     font-size: 1.6rem;
   }
-  
+`
+const GitInfo = styled.div `
+  flex-grow: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  img.logo {
+    width: 10.2rem;
+    height: 10.2rem;
+  }
+  img.logo-text {
+    width: 13.9rem;
+  }
+  p {
+    width: 28.5rem;
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+  }
 `
 export default function Home() {
   const users = useSelector(state => state.users)
@@ -38,16 +62,24 @@ export default function Home() {
   })
   return (
     <Container>
-      <Header title="Search"></Header>
-      <SearchField>
-        <TextField id="searchbox" placeholder='Enter GitHub username, i.e. gaearon'
-          onChange={handleSearch} value={users.search_query} type="text" autoFocus />
-      </SearchField>
-      <img src="/imgs/githublogo.jpg"></img>
-      <img src="/imgs/githubtext.jpg"></img>
-      <p>Search Enter GitHub username, i.e. gaearon Enter GitHub username and search users matching the input like Google Search, click avatars to view more details, including repositories, followers and following.  search favorite Search Favorite</p>
-      <ResultList></ResultList>
-      <Footer/>
+      <div className="head">
+        <Header title="Search"></Header>
+        <SearchField>
+          <TextField id="searchbox" placeholder='Enter GitHub username, i.e. gaearon'
+            onChange={handleSearch} value={users.search_query} type="text" autoFocus />
+        </SearchField>
+      </div>
+      <div className="body">
+        <GitInfo>
+          <img className="logo" src="/imgs/githublogo.jpg"></img>
+          <img className="logo-text" src="/imgs/githubtext.jpg"></img>
+          <p>Enter GitHub username and search users matching the input like Google Search, click avatars to view more details, including repositories, followers and following.</p>
+        </GitInfo>
+        <ResultList></ResultList>
+      </div>
+      <div className="tail">
+        <Footer/>
+      </div>
     </Container>
   );
 }
