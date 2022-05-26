@@ -3,7 +3,7 @@ import './Home.css';
 import TextField, { textFieldClasses } from '@mui/material/TextField';
 import ResultList from './components/ResultList';
 import { useDispatch, useSelector } from 'react-redux';
-import { queryUsers, updateQuery } from './reducers/userReducer';
+import { queryUsers, updateQuery } from './reducers/usersReducer';
 import { debounce } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -70,12 +70,14 @@ export default function Home() {
         </SearchField>
       </div>
       <div className="body">
-        <GitInfo>
-          <img className="logo" src="/imgs/githublogo.jpg"></img>
-          <img className="logo-text" src="/imgs/githubtext.jpg"></img>
-          <p>Enter GitHub username and search users matching the input like Google Search, click avatars to view more details, including repositories, followers and following.</p>
-        </GitInfo>
-        <ResultList></ResultList>
+        {users.search_query
+          ? <ResultList></ResultList>
+          : <GitInfo>
+            <img className="logo" src="/imgs/githublogo.jpg"></img>
+            <img className="logo-text" src="/imgs/githubtext.jpg"></img>
+            <p>Enter GitHub username and search users matching the input like Google Search, click avatars to view more details, including repositories, followers and following.</p>
+          </GitInfo>
+        }
       </div>
       <div className="tail">
         <Footer/>

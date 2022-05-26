@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import { hydrate } from 'react-dom';
 import { Provider } from 'react-redux'
-import userReducer from './reducers/userReducer'
+import usersReducer from './reducers/usersReducer'
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { Octokit } from 'octokit';
 
@@ -11,7 +11,7 @@ import { Octokit } from 'octokit';
 // Create Redux store with state injected by the server
 const store = configureStore({
   reducer: combineReducers({
-    users: userReducer
+    users: usersReducer
   }),
   preloadedState: window.__PRELOADED_STATE__
 })

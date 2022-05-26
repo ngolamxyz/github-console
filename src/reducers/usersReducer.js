@@ -6,7 +6,10 @@ export const updateQuery = createAction('user/updateQuery');
 export const queryUsers = createAsyncThunk(
   'users/queryUsers',
   async (query) => {
-    const response = await octokit.request('https://api.github.com/search/users?q=' + query);
+    if (!query) {
+      return initialState
+    }
+    const response = await octokit.request('GET /search/users?q=' + query);
     return response.data
   }
 )

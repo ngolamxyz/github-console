@@ -7,7 +7,7 @@ import { renderToString } from 'react-dom/server';
 import qs from 'qs';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { fetchUsers } from './api/users';
-import userReducer from './reducers/userReducer'
+import usersReducer from './reducers/usersReducer'
 let passport = require('passport');
 let session = require('express-session');
 let GitHubStrategy = require('passport-github2').Strategy;
@@ -48,7 +48,7 @@ export const renderApp = async (req, res) => {
 
   const store = configureStore({
     reducer: combineReducers({
-      users: userReducer
+      users: usersReducer
     }),
     preloadedState: preloadedState
   })
@@ -101,7 +101,8 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "http://127.0.0.1:3000/auth/github/callback"
+    callbackURL: "http://127.0.0.1:3000/auth/github/callback",
+    scope: ['read:org', 'user:email']
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
