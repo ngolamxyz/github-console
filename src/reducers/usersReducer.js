@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { createAction } from '@reduxjs/toolkit';
+import { FETCH_USERS } from '../api/queries';
 
 export const updateQuery = createAction('user/updateQuery');
-
 export const queryUsers = createAsyncThunk(
   'users/queryUsers',
   async (query) => {
     if (!query) {
       return initialState
     }
-    const response = await octokit.request('GET /search/users?q=' + query);
-    return response.data
+    const response = await graphql.query({ query: FETCH_USERS, variables: { query }});
+    return response.data.search
   }
 )
 
@@ -20,7 +20,6 @@ const initialState = {
   items: [],
   search_query: ""
 };
-
 
 const usersSlice = createSlice({
   name: 'users',

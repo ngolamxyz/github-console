@@ -1,17 +1,16 @@
-import { Octokit } from "octokit"
+import setUpGraphql from "."
+import { FETCH_USERS } from "./queries";
 
 export const fetchUsers = async (query, accessToken) => {
-    const octokit = new Octokit({
-      auth: accessToken
-    })
+    const graphql = setUpGraphql(accessToken)
     let data = {
       total_count: 0,
       incomplete_results: false, 
       items: []
     }
     try {
-      const response = await octokit.request('GET /search/users', {q: query, per_page: 30})
-      data = response.data
+      const response = await graphql.query({ query: FETCH_USERS, variables: { query }});
+      return response.data.search
     } catch(err) {
       console.log(err);
     }

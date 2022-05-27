@@ -5,8 +5,8 @@ import { hydrate } from 'react-dom';
 import { Provider } from 'react-redux'
 import usersReducer from './reducers/usersReducer'
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { Octokit } from 'octokit';
-
+import { ApolloProvider } from '@apollo/client';
+import setUpGraphql from './api';
 
 // Create Redux store with state injected by the server
 const store = configureStore({
@@ -16,12 +16,16 @@ const store = configureStore({
   preloadedState: window.__PRELOADED_STATE__
 })
 
-delete window.__PRELOADED_STATE__
+const token = window.__GITHUB_TOKEN__
+const graphql = setUpGraphql(token)
+window.graphql = graphql
 
 hydrate(
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <ApolloProvider client={graphql}>
+          <App />
+        </ApolloProvider>
       </Provider>
     </BrowserRouter>,
   document.getElementById('root')
@@ -31,8 +35,5 @@ if (module.hot) {
   module.hot.accept();
 }
 
-window.octokit = new Octokit({
-  auth: window.__GITHUB_TOKEN__
-})
-
+delete window.__PRELOADED_STATE__
 delete window.__GITHUB_TOKEN__
