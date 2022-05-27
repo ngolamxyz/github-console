@@ -16,8 +16,8 @@ export default function UserInfo({ user }) {
             <div>
                 <div className="username">{user.login}</div>
                 <div className="following-details">
-                    <div className="following-details--followers">{ user.followers.totalCount } followers</div>
-                    <div className="following-details--flowing">{ user.following.totalCount } flowings</div>
+                    <div className="following-details--followers">{user.followers ? user.followers.totalCount : 0 } followers</div>
+                    <div className="following-details--flowing">{user.following ? user.following.totalCount : 0 } flowings</div>
                 </div>
 
             </div>

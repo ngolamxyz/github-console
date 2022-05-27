@@ -9,7 +9,13 @@ export const queryUsers = createAsyncThunk(
     if (!query) {
       return initialState
     }
-    const response = await graphql.query({ query: FETCH_USERS, variables: { query }});
+    let response;
+    try {
+      response = await graphql.query({ query: FETCH_USERS, variables: { query }});
+    } catch(err) {
+      console.log("APP.ERRR: ", err)
+      return initialState;
+    }
     return response.data.search
   }
 )
