@@ -21,8 +21,7 @@ export const queryUsers = createAsyncThunk(
 )
 
 const initialState = {
-  total_count: 0,
-  incomplete_results: false, 
+  userCount: 0,
   items: [],
   search_query: ""
 };
@@ -39,6 +38,7 @@ const usersSlice = createSlice({
       })
     builder.addCase(queryUsers.fulfilled, (state, action) => {
       state.items = action.payload.items
+      state.userCount = action.payload.userCount
     })
   },
 })

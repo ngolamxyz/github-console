@@ -1,7 +1,9 @@
 import { Avatar, Paper } from "@mui/material";
 import styled from "styled-components";
+import nFormatter from "../utils/nFormatter";
 
-const UserBox = styled(Paper)(({ theme }) => ({
+const UserBox = styled(Paper)
+(({ theme, round }) => ({
 //   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
 //   ...theme.typography.body2,
 //   padding: theme.spacing(1),
@@ -13,22 +15,30 @@ const StyledBox = styled(UserBox)`
     display: flex;
     align-items: center;
     position: relative;
+    &.MuiPaper-rounded {
+        border-radius: 15px;
+    }
     .avatar {
-        width: 7rem;
-        height: 7rem;
-        margin-right: 2rem;
+        width: 9rem;
+        height: 9rem;
+        margin-right: 10px;
+        padding: .6rem;
+        .MuiAvatar-img {
+            border-radius: 10px;
+        }
     }
     .following-icon {
-        width: 2rem;
-        height: 2rem;
+        width: 2.2rem;
+        height: 2.2rem;
         position: absolute;
-        top: 5px;
+        top: 10px;
         right: 5px;
     }
     .details {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        height: 7rem;
     }
     .following-details {
         font-size: 1.2rem;
@@ -50,12 +60,12 @@ export default function UserInfo({ user }) {
             <div className="details">
                 <div className="username">{user.login}</div>
                 <div className="following-details">
-                    <div className="following-details--followers">{user.followers ? user.followers.totalCount : 0 } followers</div>
-                    <div className="following-details--flowing">{user.following ? user.following.totalCount : 0 } flowings</div>
+                    <div className="following-details--followers">{user.followers ? nFormatter(user.followers.totalCount, 1) : 0 } followers</div>
+                    <div className="following-details--flowing">{user.following ? nFormatter(user.following.totalCount, 1) : 0 } flowings</div>
                 </div>
             </div>
             <svg className="following-icon">
-                <use xlinkHref="/imgs/sprite.svg#following-icon"/>
+                <use xlinkHref={ `/imgs/sprite.svg#${user.viewerIsFollowing ? 'following-icon' : 'unfollowing-icon'}` } />
             </svg>
         </StyledBox>
     )

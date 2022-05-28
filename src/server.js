@@ -32,8 +32,7 @@ export const renderApp = async (req, res) => {
   const params = qs.parse(req.query);
   const searchQuery = params.q || ""
   let apiResult = {
-    total_count: 0,
-    incomplete_results: false, 
+    userCount: 0,
     items: [],
     search_query: searchQuery
   }

@@ -70,6 +70,7 @@ export default function Home() {
         </SearchField>
       </div>
       <div className="body">
+        <p>{users.userCount.toLocaleString()} GitHub users found</p>
         {users.search_query
           ? <ResultList></ResultList>
           : <GitInfo>
