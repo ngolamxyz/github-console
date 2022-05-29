@@ -1,5 +1,7 @@
 import { Avatar, Paper } from "@mui/material";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { toggleFollowUser } from "../reducers/usersReducer";
 import nFormatter from "../utils/nFormatter";
 
 const UserBox = styled(Paper)
@@ -54,6 +56,10 @@ const StyledBox = styled(UserBox)`
 `
 
 export default function UserInfo({ user }) {
+    const dispatch = useDispatch()
+    const toggleFollowing = () => {
+        dispatch(toggleFollowUser(user))
+    }
     return (
         <StyledBox>
             <Avatar className="avatar" src={user.avatarUrl} alt={user.login} variant="rounded"/>
@@ -64,7 +70,7 @@ export default function UserInfo({ user }) {
                     <div className="following-details--flowing">{user.following ? nFormatter(user.following.totalCount, 1) : 0 } flowings</div>
                 </div>
             </div>
-            <svg className="following-icon">
+            <svg className="following-icon" onClick={toggleFollowing}>
                 <use xlinkHref={ `/imgs/sprite.svg#${user.viewerIsFollowing ? 'following-icon' : 'unfollowing-icon'}` } />
             </svg>
         </StyledBox>

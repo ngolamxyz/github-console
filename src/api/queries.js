@@ -21,3 +21,26 @@ query Users($query: String!, $after: String) {
     }
   }
 }`;
+
+
+export const FOLLOW_A_USER = gql`
+mutation FollowUser($userId: ID!) {
+  result: followUser(input: {userId: $userId}) {
+    user {
+      id
+      viewerIsFollowing
+    }
+  }
+}`;
+
+
+export const UNFOLLOW_A_USER = gql`
+mutation UnFollowUser($userId: ID!) {
+  result: unfollowUser(input: {userId: $userId}) {
+    user {
+     id
+      viewerIsFollowing
+    }
+  }
+}`;
+

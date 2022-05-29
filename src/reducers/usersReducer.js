@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { createAction } from '@reduxjs/toolkit';
-import { FETCH_USERS } from '../api/queries';
+import { FETCH_USERS, FOLLOW_A_USER, UNFOLLOW_A_USER } from '../api/queries';
 import { ITEMS_PER_PAGE } from '../utils/contants';
 
 export const updateQuery = createAction('user/updateQuery');
@@ -27,6 +27,19 @@ export const queryUsers = createAsyncThunk(
   }
 )
 
+export const toggleFollowUser = createAsyncThunk(
+  'users/followUser',
+  async (user) => {
+    const mutation = user.viewerIsFollowing ? UNFOLLOW_A_USER : FOLLOW_A_USER;
+    try {
+      const response = await graphql.mutate({ mutation, variables: { userId: user.id }});
+      return response.data.result
+    } catch(err) {
+      console.log("APP.ERRR: ", err)
+    }
+  }
+)
+
 const initialState = {
   userCount: 0,
   items: [],
@@ -47,6 +60,16 @@ const usersSlice = createSlice({
     builder.addCase(queryUsers.fulfilled, (state, action) => {
       state.items = action.payload.items
       state.userCount = action.payload.userCount
+    })
+    builder.addCase(toggleFollowUser.fulfilled, (state, action) => {
+      const currUser = action.payload.user;
+      state.items = state.items.map(user => {
+        if (user.id === currUser.id) {
+          return {...user, viewerIsFollowing: currUser.viewerIsFollowing}
+        } else {
+          return user;
+        }
+      })
     })
   },
 })

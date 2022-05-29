@@ -101,7 +101,6 @@ passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: "http://127.0.0.1:3000/auth/github/callback",
-    scope: ['read:org', 'user:email']
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -117,7 +116,7 @@ server.use(passport.session());
 server.get('/', ensureAuthenticated)
 
 server.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email' ] }),
+  passport.authenticate('github', { scope: [ 'user:email', 'user:follow' ] }),
   function(req, res){
   });
 
