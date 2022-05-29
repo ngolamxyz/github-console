@@ -4,7 +4,7 @@ import TextField, { textFieldClasses } from '@mui/material/TextField';
 import ResultList from './components/ResultList';
 import { useDispatch, useSelector } from 'react-redux';
 import { queryUsers, updateQuery } from './reducers/usersReducer';
-import { debounce } from '@mui/material';
+import { debounce, IconButton, InputAdornment } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import styled from 'styled-components';
@@ -17,14 +17,25 @@ const Container = styled.div `
   .head {
     padding: 1rem 4rem;
   }
+  .body {
+    flex: 1
+  }
 `
 const SearchField = styled.div `
   display: flex;
   justify-content: center;
+  position: relative;
   > div {
     width: 100%;
     padding: 1rem 1rem 1rem 0;
     font-size: 1.6rem;
+  }
+  .clearIcon {
+    width: 20px;
+    height: 23px;
+    position: absolute;
+    top: 25px;
+    right: 25px;
   }
 `
 const GitInfo = styled.div `
@@ -54,12 +65,16 @@ export default function Home() {
   const handleSearch = (event) => {
     const searchValue = event.target.value;
     dispatch(updateQuery(searchValue))
-    window.history.replaceState(null, null, `?q=${searchValue}`);
     loadData(searchValue)
   }
   const loadData = debounce((searchValue) => {
-    dispatch(queryUsers(searchValue))
+    dispatch(queryUsers())
   })
+
+  const clearInput = (event) => {
+    dispatch(updateQuery(""))
+    dispatch(queryUsers())
+  }
   return (
     <Container>
       <div className="head">
@@ -67,6 +82,12 @@ export default function Home() {
         <SearchField>
           <TextField id="searchbox" placeholder='Enter GitHub username, i.e. gaearon'
             onChange={handleSearch} value={users.search_query} type="text" autoFocus />
+          {users.search_query 
+            ?  <svg className='clearIcon' onClick={clearInput}>
+                  <use xlinkHref="/imgs/sprite.svg#clear-icon"/>
+               </svg>
+            : <></>
+          }
         </SearchField>
       </div>
       <div className="body">
