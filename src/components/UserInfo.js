@@ -67,7 +67,7 @@ export default function UserInfo({ user }) {
                 <div className="username">{user.login}</div>
                 <div className="following-details">
                     <div className="following-details--followers">{user.followers ? nFormatter(user.followers.totalCount, 1) : 0 } followers</div>
-                    <div className="following-details--flowing">{user.following ? nFormatter(user.following.totalCount, 1) : 0 } flowings</div>
+                    <div className="following-details--followings">{user.following ? nFormatter(user.following.totalCount, 1) : 0 } followings</div>
                 </div>
             </div>
             <svg className="following-icon" onClick={toggleFollowing}>
