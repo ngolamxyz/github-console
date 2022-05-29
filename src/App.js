@@ -5,20 +5,18 @@ import './App.scss';
 
 
 const ClientOnly = ({ children, ...delegated }) => {
+  const [hasMounted, setHasMounted] = React.useState(false);
+  React.useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
-const [hasMounted, setHasMounted] = React.useState(false);
+  if (!hasMounted) return null
 
-React.useEffect(() => {
-setHasMounted(true);
-}, []);
-
-if (!hasMounted) return null
-
-return (
-<React.Fragment {...delegated}>
-{children}
-</React.Fragment>
-);
+  return (
+    <React.Fragment {...delegated}>
+      {children}
+    </React.Fragment>
+  );
 }
 
 
