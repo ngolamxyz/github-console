@@ -6,7 +6,7 @@ import UserInfo from "./UserInfo";
 
 export default function ResultList() {
     const usersData = useSelector(state => state.users)
-    const dispath = useDispatch()
+    const dispatch = useDispatch()
     const numberOfPages = Math.min(Math.ceil(parseInt(usersData.userCount)/ITEMS_PER_PAGE), MAX_PAGES)
     const gridItems = usersData.items.map(user =>
         <Grid item key={ user.id } xs={6}>
@@ -14,7 +14,7 @@ export default function ResultList() {
         </Grid>
         )
     const handlePaging = (event, pageNumber) => {
-        dispath(queryUsers(pageNumber))
+        dispatch(queryUsers(pageNumber))
     }
     return (
         <>

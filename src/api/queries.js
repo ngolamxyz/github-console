@@ -45,9 +45,9 @@ mutation UnFollowUser($userId: ID!) {
 }`;
 
 export const FETCH_FAVORITE = gql`
-query Favorite($login: String!) {
+query Favorite($login: String!, $after: String, $before: String) {
   user(login: $login) {
-    following(first: ${ITEMS_PER_PAGE}) {
+    following(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
       users: nodes {
         login
         id
@@ -61,6 +61,12 @@ query Favorite($login: String!) {
         viewerIsFollowing
       }
       totalCount
+      pageInfo {
+        hasNextPage
+        startCursor
+        hasPreviousPage
+        endCursor
+      }
     }
   }
 }`;
