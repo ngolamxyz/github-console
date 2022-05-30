@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import './App.scss';
+import Favorite from './components/Favorite';
 
 
 const ClientOnly = ({ children, ...delegated }) => {
@@ -24,6 +25,7 @@ const App = () => (
   <ClientOnly>
     <Switch>
       <Route exact={true} path="/" component={Home} />
+      <Route exact={true} path="/liked" component={Favorite}/>
     </Switch>
   </ClientOnly>
 );

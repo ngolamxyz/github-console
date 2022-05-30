@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import styled from "styled-components"
 
 const StyledFooter = styled.div `
@@ -25,16 +26,20 @@ export default function Footer() {
     return (
         <StyledFooter>
             <div className="action">
-                <svg>
-                    <use xlinkHref="/imgs/sprite.svg#lookup-icon"/>
-                </svg>
-                <span>Search</span>
+                <Link to={"/"}>
+                    <svg>
+                        <use xlinkHref="/imgs/sprite.svg#lookup-icon"/>
+                    </svg>
+                    <span>Search</span>
+                </Link>
             </div>
             <div className="action">
-                <svg>
-                    <use xlinkHref="/imgs/sprite.svg#liked-icon"/>
-                </svg>
-                <span>Favorite</span>
+                <Link to={"/liked"}>
+                    <svg>
+                        <use xlinkHref="/imgs/sprite.svg#liked-icon"/>
+                    </svg>
+                    <span>Favorite</span>
+                </Link>
             </div>
         </StyledFooter>
     )

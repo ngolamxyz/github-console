@@ -1,6 +1,7 @@
 import { Avatar, Paper } from "@mui/material";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { queryFavorites, unFollowUser } from "../reducers/favoriteReducer";
 import { toggleFollowUser } from "../reducers/usersReducer";
 import nFormatter from "../utils/nFormatter";
 
@@ -58,7 +59,7 @@ const StyledBox = styled(UserBox)`
 export default function UserInfo({ user }) {
     const dispatch = useDispatch()
     const toggleFollowing = () => {
-        dispatch(toggleFollowUser(user))
+        dispatch(toggleFollowUser(user)).then(() => dispatch(queryFavorites()))
     }
     return (
         <StyledBox>

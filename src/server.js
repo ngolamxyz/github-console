@@ -5,7 +5,7 @@ import { StaticRouter } from 'react-router-dom';
 import express from 'express';
 import { renderToString } from 'react-dom/server';
 import qs from 'qs';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, createReducer } from '@reduxjs/toolkit';
 import { fetchUsers } from './api/users';
 import usersReducer from './reducers/usersReducer'
 let passport = require('passport');
@@ -37,8 +37,10 @@ export const renderApp = async (req, res) => {
     search_query: searchQuery
   }
 
+  const { accessToken, profile } = req.user;
+
   if (searchQuery) {
-    apiResult = await fetchUsers(searchQuery, req.user)
+    apiResult = await fetchUsers(searchQuery, accessToken)
   }
   const context = {};
   context.session = req.session
@@ -47,7 +49,7 @@ export const renderApp = async (req, res) => {
 
   const store = configureStore({
     reducer: combineReducers({
-      users: usersReducer
+      users: usersReducer,
     }),
     preloadedState: preloadedState
   })
@@ -73,7 +75,11 @@ export const renderApp = async (req, res) => {
       <div id="root">${markup}</div>
       ${jsScriptTagsFromAssets(assets, 'client', 'defer', 'crossorigin')}
       <script>
-          window.__GITHUB_TOKEN__ = "${req.user}"
+          window.__GITHUB_TOKEN__ = "${accessToken}"
+          window.__LOGIN_USER__ = ${JSON.stringify(profile).replace(
+            /</g,
+            '\\u003c'
+          )}
           window.__PRELOADED_STATE__ = ${JSON.stringify(finalState).replace(
             /</g,
             '\\u003c'
@@ -104,7 +110,7 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      return done(null, accessToken);
+      return done(null, { accessToken, profile });
     });
   }
 ));

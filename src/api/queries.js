@@ -44,3 +44,31 @@ mutation UnFollowUser($userId: ID!) {
   }
 }`;
 
+export const FETCH_FAVORITE = gql`
+query Favorite($login: String!) {
+  user(login: $login) {
+    following(first: ${ITEMS_PER_PAGE}) {
+      users: nodes {
+        login
+        id
+        avatarUrl
+        followers {
+          totalCount
+        }
+        following {
+          totalCount
+        }
+        viewerIsFollowing
+      }
+      totalCount
+    }
+  }
+}`;
+
+export const LOGIN_USER_INFO = gql`
+query { 
+  viewer { 
+    login
+  }
+}
+`

@@ -3,15 +3,17 @@ import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import { hydrate } from 'react-dom';
 import { Provider } from 'react-redux'
-import usersReducer from './reducers/usersReducer'
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { ApolloProvider } from '@apollo/client';
 import setUpGraphql from './api';
+import usersReducer from './reducers/usersReducer'
+import favoriteReducer from './reducers/favoriteReducer';
 
 // Create Redux store with state injected by the server
 const store = configureStore({
   reducer: combineReducers({
-    users: usersReducer
+    users: usersReducer,
+    favorite: favoriteReducer
   }),
   preloadedState: window.__PRELOADED_STATE__
 })
@@ -19,6 +21,7 @@ const store = configureStore({
 const token = window.__GITHUB_TOKEN__
 const graphql = setUpGraphql(token)
 window.graphql = graphql
+window.profile = window.__LOGIN_USER__
 
 hydrate(
     <BrowserRouter>
