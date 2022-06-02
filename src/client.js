@@ -9,6 +9,12 @@ import setUpGraphql from './api';
 import usersReducer from './reducers/usersReducer'
 import favoriteReducer from './reducers/favoriteReducer';
 import detailReducer from './reducers/detailReducer';
+import createEmotionCache from './utils/createEmotionCache';
+import { CacheProvider } from '@emotion/react';
+import { ThemeProvider } from 'styled-components';
+import theme from './theme'
+
+const cache = createEmotionCache()
 
 // Create Redux store with state injected by the server
 const store = configureStore({
@@ -29,7 +35,11 @@ hydrate(
     <BrowserRouter>
       <Provider store={store}>
         <ApolloProvider client={graphql}>
-          <App />
+          <CacheProvider value={cache}>
+            <ThemeProvider theme={theme}>
+              <App />
+            </ThemeProvider>
+          </CacheProvider>
         </ApolloProvider>
       </Provider>
     </BrowserRouter>,

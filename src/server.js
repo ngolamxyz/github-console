@@ -10,6 +10,12 @@ import usersReducer from './reducers/usersReducer'
 import { queryExtraUserDetail, queryLikedUsers, queryUserDetail, queryUsers } from './api/initializeState';
 import favoriteReducer from './reducers/favoriteReducer';
 import detailReducer from './reducers/detailReducer';
+import { CacheProvider } from '@emotion/react';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import createEmotionCache from './utils/createEmotionCache';
+import createEmotionServer from '@emotion/server/create-instance';
+import theme from './theme'
+
 let passport = require('passport');
 let session = require('express-session');
 let GitHubStrategy = require('passport-github2').Strategy;
@@ -72,14 +78,27 @@ export const renderApp = async (req, res, next) => {
     preloadedState
   })
 
+  const cache = createEmotionCache();
+  const { extractCriticalToChunks, constructStyleTagsFromChunks } =
+    createEmotionServer(cache);
+
+
   const context = {};
   const markup = renderToString(
-    <StaticRouter context={context} location={req.url}>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </StaticRouter>
+    <ThemeProvider theme={theme}>
+      <CacheProvider value={cache}>
+        <StaticRouter context={context} location={req.url}>
+          <Provider store={store}>
+            <CssBaseline/>
+            <App />
+          </Provider>
+        </StaticRouter>
+      </CacheProvider>
+    </ThemeProvider>
   );
+
+  const emotionChunks = extractCriticalToChunks(markup)
+  const emotionCss = constructStyleTagsFromChunks(emotionChunks)
   const finalState = store.getState();
   const html = `<!doctype html>
   <html lang="">
@@ -89,6 +108,7 @@ export const renderApp = async (req, res, next) => {
       <title>Welcome to Razzle</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       ${cssLinksFromAssets(assets, 'client')}
+      ${emotionCss}
   </head>
   <body>
       <div id="root">${markup}</div>
