@@ -34,7 +34,7 @@ export default function Footer() {
                 </Link>
             </div>
             <div className="action">
-                <Link to={"/liked"}>
+                <Link to={"/users/ngolamxyz/abc"}>
                     <svg>
                         <use xlinkHref="/imgs/sprite.svg#liked-icon"/>
                     </svg>

@@ -8,12 +8,14 @@ import { ApolloProvider } from '@apollo/client';
 import setUpGraphql from './api';
 import usersReducer from './reducers/usersReducer'
 import favoriteReducer from './reducers/favoriteReducer';
+import detailReducer from './reducers/detailReducer';
 
 // Create Redux store with state injected by the server
 const store = configureStore({
   reducer: combineReducers({
     users: usersReducer,
-    favorite: favoriteReducer
+    favorite: favoriteReducer,
+    user: detailReducer
   }),
   preloadedState: window.__PRELOADED_STATE__
 })

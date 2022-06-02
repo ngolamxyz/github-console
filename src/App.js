@@ -3,31 +3,22 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import './App.scss';
 import Favorite from './components/Favorite';
+import UserDetail from './components/UserDetail'
 
-
-const ClientOnly = ({ children, ...delegated }) => {
-  const [hasMounted, setHasMounted] = React.useState(false);
-  React.useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
-  if (!hasMounted) return null
-
-  return (
-    <React.Fragment {...delegated}>
-      {children}
-    </React.Fragment>
-  );
-}
 
 
 const App = () => (
-  <ClientOnly>
-    <Switch>
-      <Route exact={true} path="/" component={Home} />
-      <Route exact={true} path="/liked" component={Favorite}/>
-    </Switch>
-  </ClientOnly>
+  <Switch>
+    <Route exact={true} path="/">
+      <Home/>
+    </Route>
+    <Route exact={true} path="/liked">
+      <Favorite/>
+    </Route>
+    <Route path="/users/:username">
+      <UserDetail/>
+    </Route>
+  </Switch>
 );
 
 export default App;

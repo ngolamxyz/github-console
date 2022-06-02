@@ -48,7 +48,7 @@ export const FETCH_FAVORITE = gql`
 query Favorite($login: String!, $after: String, $before: String) {
   user(login: $login) {
     following(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
-      users: nodes {
+      followingUsers: nodes {
         login
         id
         avatarUrl
@@ -70,6 +70,93 @@ query Favorite($login: String!, $after: String, $before: String) {
     }
   }
 }`;
+
+export const USER_DETAILS = gql`
+query UserDetail($login: String!){
+  user(login: $login) {
+    login
+    avatarUrl
+    name
+    location
+  }
+}
+`
+
+export const REPO_DETAILS = gql`
+query RepoDetails($login: String!, $after: String, $before: String){
+  user(login: $login) {
+    repositories(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
+      totalCount
+      items: nodes {
+        id
+        name
+        stargazerCount
+        forkCount
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+}
+`
+export const FOLLOWERS_DETAILS = gql`
+query FollowersDetails($login: String!, $after: String, $before: String){
+  user(login: $login) {
+    followers(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
+      totalCount
+      items: nodes {
+        id
+        avatarUrl
+        login
+        followers {
+          totalCount
+        }
+        following {
+          totalCount
+        }
+        viewerIsFollowing
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+}
+`
+export const FOLLOWINGS_DETAILS = gql`
+query FollowingDetails($login: String!, $after: String, $before: String){
+  user(login: $login) {
+    following(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
+      totalCount
+      items: nodes {
+        id
+        avatarUrl
+        login
+        followers {
+          totalCount
+        }
+        following {
+          totalCount
+        }
+        viewerIsFollowing
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+}
+`
 
 export const LOGIN_USER_INFO = gql`
 query { 

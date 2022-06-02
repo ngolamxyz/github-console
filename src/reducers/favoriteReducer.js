@@ -25,9 +25,8 @@ const favoriteSlice = createSlice({
     reducers: { },
     extraReducers: (builder) => {
         builder.addCase(queryFavorites.fulfilled, (state, action) => {
-            state.followingUsers = action.payload.users
-            state.totalCount = action.payload.totalCount
-            state.pageInfo = action.payload.pageInfo
+            const data = action.payload
+            return {...state, ...data }
         })
     }
 

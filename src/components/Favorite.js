@@ -20,10 +20,13 @@ export default function Favorite() {
             </Grid>
         )
     })
+
     useEffect(() => {
-        dispatch(queryFavorites())
-        return () => { }
+        if (!favorite.pageInfo.startCursor) {
+            dispatch(queryFavorites())
+        }
     }, [])
+
     return (
         <>
             <Header title="Search"/>

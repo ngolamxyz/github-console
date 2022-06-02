@@ -4,15 +4,42 @@ import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import express from 'express';
 import { renderToString } from 'react-dom/server';
-import qs from 'qs';
-import { combineReducers, configureStore, createReducer } from '@reduxjs/toolkit';
-import { fetchUsers } from './api/users';
+import { matchPath } from "react-router-dom";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import usersReducer from './reducers/usersReducer'
+import { queryExtraUserDetail, queryLikedUsers, queryUserDetail, queryUsers } from './api/initializeState';
+import favoriteReducer from './reducers/favoriteReducer';
+import detailReducer from './reducers/detailReducer';
 let passport = require('passport');
 let session = require('express-session');
 let GitHubStrategy = require('passport-github2').Strategy;
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
+
+const routes = [
+  {
+    path: "/",
+    exact: true,
+    strict: true,
+    initializeState : (match, req) => queryUsers(match, req)
+  },
+  {
+    path: "/liked",
+    exact: true,
+    strict: true,
+    initializeState : (match, req) => queryLikedUsers(match, req)
+  },
+  {
+    path: "/users/:username",
+    exact: true,
+    initializeState : (match, req) => queryUserDetail(match, req)
+  },
+  {
+    path: "/users/:username/:category",
+    exact: true,
+    initializeState : (match, req) => queryExtraUserDetail(match, req)
+  }
+]
 
 const cssLinksFromAssets = (assets, entrypoint) => {
   return assets[entrypoint] ? assets[entrypoint].css ?
@@ -28,32 +55,26 @@ const jsScriptTagsFromAssets = (assets, entrypoint, ...extra) => {
   ).join('') : '' : '';
 };
 
-export const renderApp = async (req, res) => {
-  const params = qs.parse(req.query);
-  const searchQuery = params.q || ""
-  let apiResult = {
-    userCount: 0,
-    items: [],
-    search_query: searchQuery
-  }
-
+export const renderApp = async (req, res, next) => {
   const { accessToken, profile } = req.user;
 
-  if (searchQuery) {
-    apiResult = await fetchUsers(searchQuery, accessToken)
-  }
-  const context = {};
-  context.session = req.session
-
-  const preloadedState = { users: { ...apiResult, search_query: searchQuery } }
-
+  const promises = [];
+  routes.some(route => {
+    const match = matchPath(req.url, route);
+    if (match) promises.push(route.initializeState(match, req));
+    return match;
+  });
+  const [ preloadedState ] = await Promise.all(promises);
   const store = configureStore({
     reducer: combineReducers({
       users: usersReducer,
+      favorite: favoriteReducer,
+      user: detailReducer
     }),
-    preloadedState: preloadedState
+    preloadedState
   })
 
+  const context = {};
   const markup = renderToString(
     <StaticRouter context={context} location={req.url}>
       <Provider store={store}>
@@ -121,15 +142,16 @@ server.use(passport.session());
 
 server.get('/', ensureAuthenticated)
 
-server.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email', 'user:follow' ] }),
-  function(req, res){
+server.get('/auth/github', function(req, res, next) {
+    const authenticator = passport.authenticate('github', { scope: [ 'user:email', 'user:follow' ], state : req.query.redirect_uri });
+    authenticator(req, res, next)
   });
 
 server.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    const url = req.query.state;
+    res.redirect(url);
   });
 
 server.get('/*', ensureAuthenticated, async (req, res) => {
@@ -143,7 +165,7 @@ server.get('/*', ensureAuthenticated, async (req, res) => {
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/auth/github')
+  res.redirect(`/auth/github?redirect_uri=${req.url}`)
 }
 
 export default server;
