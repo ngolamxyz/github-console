@@ -1,14 +1,7 @@
 import setUpGraphql from "."
 import qs from 'qs'
 import { FETCH_FAVORITE, FETCH_USERS, USER_DETAILS } from "./queries";
-import { FOLLOWERS_DETAILS, FOLLOWINGS_DETAILS, REPO_DETAILS } from "../api/queries";
-
-
-export const CATEGORY = {
-    repositories: { query: REPO_DETAILS, stateName: "repositories" },
-    following: { query: FOLLOWINGS_DETAILS, stateName: "following" },
-    followers: { query: FOLLOWERS_DETAILS, stateName: "followers" }
-}
+import { CATEGORY } from "../utils/enums";
 
 export const queryUsers = async (match, req) => {
     const { user } = req

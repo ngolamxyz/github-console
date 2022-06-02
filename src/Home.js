@@ -1,7 +1,7 @@
 import React from 'react';
 import './Home.css';
 import TextField, { textFieldClasses } from '@mui/material/TextField';
-import ResultList from './components/ResultList';
+import ResultList from './components/SearchResult';
 import { useDispatch, useSelector } from 'react-redux';
 import { queryUsers, updateQuery } from './reducers/usersReducer';
 import { debounce, IconButton, InputAdornment } from '@mui/material';

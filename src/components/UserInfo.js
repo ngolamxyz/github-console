@@ -56,23 +56,23 @@ const StyledBox = styled(UserBox)`
 
 `
 
-export default function UserInfo({ user }) {
+export default function UserInfo({ info }) {
     const dispatch = useDispatch()
     const toggleFollowing = () => {
-        dispatch(toggleFollowUser(user)).then(() => dispatch(queryFavorites()))
+        dispatch(toggleFollowUser(info)).then(() => dispatch(queryFavorites()))
     }
     return (
         <StyledBox>
-            <Avatar className="avatar" src={user.avatarUrl} alt={user.login} variant="rounded"/>
+            <Avatar className="avatar" src={info.avatarUrl} alt={info.login} variant="rounded"/>
             <div className="details">
-                <div className="username">{user.login}</div>
+                <div className="username">{info.login}</div>
                 <div className="following-details">
-                    <div className="following-details--followers">{user.followers ? nFormatter(user.followers.totalCount, 1) : 0 } followers</div>
-                    <div className="following-details--followings">{user.following ? nFormatter(user.following.totalCount, 1) : 0 } followings</div>
+                    <div className="following-details--followers">{info.followers ? nFormatter(info.followers.totalCount, 1) : 0 } followers</div>
+                    <div className="following-details--followings">{info.following ? nFormatter(info.following.totalCount, 1) : 0 } followings</div>
                 </div>
             </div>
             <svg className="following-icon" onClick={toggleFollowing}>
-                <use xlinkHref={ `/imgs/sprite.svg#${user.viewerIsFollowing ? 'following-icon' : 'unfollowing-icon'}` } />
+                <use xlinkHref={ `/imgs/sprite.svg#${info.viewerIsFollowing ? 'following-icon' : 'unfollowing-icon'}` } />
             </svg>
         </StyledBox>
     )

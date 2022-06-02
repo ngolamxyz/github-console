@@ -18,12 +18,6 @@ const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
 const routes = [
   {
-    path: "/",
-    exact: true,
-    strict: true,
-    initializeState : (match, req) => queryUsers(match, req)
-  },
-  {
     path: "/liked",
     exact: true,
     strict: true,
@@ -38,7 +32,11 @@ const routes = [
     path: "/users/:username/:category",
     exact: true,
     initializeState : (match, req) => queryExtraUserDetail(match, req)
-  }
+  },
+  {
+    path: "/",
+    initializeState : (match, req) => queryUsers(match, req)
+  },
 ]
 
 const cssLinksFromAssets = (assets, entrypoint) => {

@@ -10,7 +10,7 @@ export default function ResultList() {
     const numberOfPages = Math.min(Math.ceil(parseInt(usersData.userCount)/ITEMS_PER_PAGE), MAX_PAGES)
     const gridItems = usersData.items.map(user =>
         <Grid item key={ user.id } xs={6}>
-            <UserInfo user={ user } />
+            <UserInfo info={ user } />
         </Grid>
         )
     const handlePaging = (event, pageNumber) => {

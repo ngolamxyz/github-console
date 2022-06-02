@@ -16,7 +16,7 @@ export default function Favorite() {
     users = favorite.followingUsers.map(user => {
         return (
             <Grid item key={ user.id } xs={6}>
-                <UserInfo user={ user } />
+                <UserInfo info={ user } />
             </Grid>
         )
     })
