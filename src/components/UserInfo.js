@@ -56,10 +56,10 @@ const StyledBox = styled(UserBox)`
 
 `
 
-export default function UserInfo({ info }) {
+export default function UserInfo({ info, afterToggle }) {
     const dispatch = useDispatch()
     const toggleFollowing = () => {
-        dispatch(toggleFollowUser(info)).then(() => dispatch(queryFavorites()))
+        dispatch(toggleFollowUser(info)).then(() => afterToggle ? afterToggle() : null)
     }
     return (
         <StyledBox>

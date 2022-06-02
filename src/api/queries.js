@@ -74,6 +74,7 @@ query Favorite($login: String!, $after: String, $before: String) {
 export const USER_DETAILS = gql`
 query UserDetail($login: String!){
   user(login: $login) {
+    id
     login
     avatarUrl
     name
@@ -85,6 +86,7 @@ query UserDetail($login: String!){
 export const REPO_DETAILS = gql`
 query RepoDetails($login: String!, $after: String, $before: String){
   user(login: $login) {
+    id
     repositories(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
       totalCount
       items: nodes {
@@ -106,6 +108,7 @@ query RepoDetails($login: String!, $after: String, $before: String){
 export const FOLLOWERS_DETAILS = gql`
 query FollowersDetails($login: String!, $after: String, $before: String){
   user(login: $login) {
+    id
     followers(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
       totalCount
       items: nodes {
@@ -133,6 +136,7 @@ query FollowersDetails($login: String!, $after: String, $before: String){
 export const FOLLOWINGS_DETAILS = gql`
 query FollowingDetails($login: String!, $after: String, $before: String){
   user(login: $login) {
+    id
     following(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
       totalCount
       items: nodes {

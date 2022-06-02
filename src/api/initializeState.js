@@ -1,7 +1,6 @@
 import setUpGraphql from "."
 import qs from 'qs'
-import { FETCH_FAVORITE, FETCH_USERS, USER_DETAILS } from "./queries";
-import { CATEGORY } from "../utils/enums";
+import { FETCH_FAVORITE, FETCH_USERS, FOLLOWERS_DETAILS, FOLLOWINGS_DETAILS, REPO_DETAILS, USER_DETAILS } from "./queries";
 
 export const queryUsers = async (match, req) => {
     const { user } = req
@@ -61,7 +60,7 @@ export const queryUserDetail = async (match, req) => {
     try {
       const response = await graphql.query({ query: USER_DETAILS, variables: { login } });
       const data = response.data.user
-      initialState.user.userDetail = { ...initialState.userDetail, ...data }
+      initialState.user.userDetail = data
     } catch(err) {
       console.log(err);
     }
@@ -71,24 +70,38 @@ export const queryUserDetail = async (match, req) => {
 export const queryExtraUserDetail = async (match, req) => {
     const { user } = req
     const { username, category } = match.params
-    let initialState =  {
+    let initialState = {
       user: {
         userDetail: {},
-        [CATEGORY[category].stateName]: {}
+        repositories: { items: []},
+        followers: { items: []},
+        following: { items: []}
       }
-    }
+    };
     const login = username
+
+    let queryExtra = REPO_DETAILS
+    switch (category) {
+      case 'followers':
+        queryExtra = FOLLOWERS_DETAILS
+        break;
+      case 'following':
+        queryExtra = FOLLOWINGS_DETAILS
+        break;
+      default:
+        break;
+    }
 
     const graphql = setUpGraphql(user.accessToken)
     try {
       const responses = await Promise.all([
         graphql.query({ query: USER_DETAILS, variables: { login } }),
-        graphql.query({ query: CATEGORY[category].query, variables: { login } })
+        graphql.query({ query: queryExtra, variables: { login } })
       ])
       const userData = responses[0].data.user
-      const extraData = responses[1].data.user[CATEGORY[category].stateName]
-      initialState.user.userDetail = { ...initialState.userDetail, ...userData }
-      initialState.user[CATEGORY[category].stateName] = { ...initialState[CATEGORY[category].stateName], ...extraData }
+      const extraData = responses[1].data.user[category]
+      initialState.user.userDetail = userData;
+      initialState.user[category] = extraData;
     } catch(err) {
       console.log(err);
     }
