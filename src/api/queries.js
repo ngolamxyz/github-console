@@ -47,6 +47,7 @@ mutation UnFollowUser($userId: ID!) {
 export const FETCH_FAVORITE = gql`
 query Favorite($login: String!, $after: String, $before: String) {
   user(login: $login) {
+    id
     following(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
       followingUsers: nodes {
         login

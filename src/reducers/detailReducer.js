@@ -37,12 +37,10 @@ export const queryFollowings = createAsyncThunk(
 const userDetailSlice = createSlice({
     name: "user",
     initialState: {
-        user: {
-            userDetail: {},
-            repositories: { items: []},
-            followers: { items: []},
-            following: { items: []}
-        }
+        userDetail: {},
+        repositories: { items: []},
+        followers: { items: []},
+        following: { items: []}
     },
     reducers: { },
     extraReducers: (builder) => {

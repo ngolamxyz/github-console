@@ -1,6 +1,7 @@
 import { Button, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { queryFavorites } from "../reducers/favoriteReducer";
 import { ITEMS_PER_PAGE, MAX_PAGES } from "../utils/contants";
 import Footer from "./Footer";
@@ -9,6 +10,7 @@ import UserInfo from "./UserInfo";
 
 export default function Favorite() {
     const dispatch = useDispatch()
+    const history = useHistory()
     const favorite = useSelector(state => state.favorite)
     const [currPage, setCurrPage] = useState(1)
     let users = [];
@@ -16,7 +18,9 @@ export default function Favorite() {
     users = favorite.followingUsers.map(user => {
         return (
             <Grid item key={ user.id } xs={6}>
-                <UserInfo info={ user } afterToggle={() => dispatch(queryFavorites())}/>
+                <UserInfo info={ user }
+                onClick={() => history.push(`/users/${user.login}`)}
+                afterToggle={() => dispatch(queryFavorites())}/>
             </Grid>
         )
     })

@@ -56,13 +56,13 @@ const StyledBox = styled(UserBox)`
 
 `
 
-export default function UserInfo({ info, afterToggle }) {
+export default function UserInfo({ info, afterToggle, onClick }) {
     const dispatch = useDispatch()
     const toggleFollowing = () => {
         dispatch(toggleFollowUser(info)).then(() => afterToggle ? afterToggle() : null)
     }
     return (
-        <StyledBox>
+        <StyledBox onClick={onClick}>
             <Avatar className="avatar" src={info.avatarUrl} alt={info.login} variant="rounded"/>
             <div className="details">
                 <div className="username">{info.login}</div>
