@@ -1,46 +1,43 @@
-import { Link } from "react-router-dom"
-import styled from "styled-components"
+import SearchIcon from '@mui/icons-material/Search';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { BottomNavigation, BottomNavigationAction, Container, Paper } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
-const StyledFooter = styled.div `
-    padding: 1.6rem 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.05);
-    .action {
-        width: 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        span {
-            display: block;
-        }
-    }
-    svg {
-        width: 2rem;
-        height: 2rem;
-    }
-`
 export default function Footer() {
+    const [value, setValue] = useState(0);
+    const history = useHistory()
+    const { path, url } = useRouteMatch();
+
+    useEffect(() => {
+        if (path === '/') {
+            setValue(0)
+        } else if (path === '/liked') {
+            setValue(1)
+        }
+    }, [])
+
     return (
-        <StyledFooter>
-            <div className="action">
-                <Link to={"/"}>
-                    <svg>
-                        <use xlinkHref="/imgs/sprite.svg#lookup-icon"/>
-                    </svg>
-                    <span>Search</span>
-                </Link>
-            </div>
-            <div className="action">
-                <Link to={"/users/ngolamxyz/abc"}>
-                    <svg>
-                        <use xlinkHref="/imgs/sprite.svg#liked-icon"/>
-                    </svg>
-                    <span>Favorite</span>
-                </Link>
-            </div>
-        </StyledFooter>
+        <Container maxWidth="md" sx={{height: '72px', boxShadow: "0px -4px 4px rgba(0, 0, 0, 0.05)"}}>
+            <BottomNavigation
+                spa
+                showLabels
+                value={value}
+                onChange={(event, newValue) => {
+                    setValue(newValue);
+                    if (newValue === 0) {
+                        history.push('/')
+                    } else {
+                        history.push('/liked')
+                    }
+
+
+                }}
+                sx={{justifyContent: "space-between"}}
+                >
+                <BottomNavigationAction label="Search" icon={<SearchIcon />} />
+                <BottomNavigationAction label="Favorite" icon={<FavoriteIcon />} />
+            </BottomNavigation>
+        </Container> 
     )
 }

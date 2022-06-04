@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FOLLOWERS_DETAILS, FOLLOWINGS_DETAILS, REPO_DETAILS, USER_DETAILS } from "../api/queries";
-import { hasNextPage as hasNextPageHelper } from "../utils/hasNextPage";
         
 export const queryUserDetail = createAsyncThunk(
     'userDetail/fetch',
@@ -62,7 +61,7 @@ const userDetailSlice = createSlice({
     name: "user",
     initialState: {
         userDetail: { followers: {}, following: {}, repositories: {}},
-        repositories: { items: []},
+        repositories: { items: [], loading: false, pageInfo: {}},
         followers: { items: [], loading: false, pageInfo: {}},
         following: { items: [], loading: false, pageInfo: {}}
     },

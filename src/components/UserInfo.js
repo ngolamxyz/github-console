@@ -1,7 +1,6 @@
 import { Avatar, Paper } from "@mui/material";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { queryFavorites, unFollowUser } from "../reducers/favoriteReducer";
 import { toggleFollowUser } from "../reducers/usersReducer";
 import nFormatter from "../utils/nFormatter";
 
@@ -22,17 +21,17 @@ const StyledBox = styled(UserBox)`
         border-radius: 15px;
     }
     .avatar {
-        width: 9rem;
-        height: 9rem;
+        width: 90px;
+        height: 90px;
         margin-right: 10px;
-        padding: .6rem;
+        padding: 6px;
         .MuiAvatar-img {
             border-radius: 10px;
         }
     }
     .following-icon {
-        width: 2.2rem;
-        height: 2.2rem;
+        width: 22px;
+        height: 22px;
         position: absolute;
         top: 10px;
         right: 5px;
@@ -41,16 +40,15 @@ const StyledBox = styled(UserBox)`
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 7rem;
+        height: 70px;
     }
     .following-details {
-        font-size: 1.2rem;
+        font-size: 12px;
         font-weight: normal;
-        line-height: 1.6rem;
+        line-height: 16px;
     }
     .username {
         font-weight: 700;
-        font-size: 1.6rem;
         line-height: 24px;
     }
 

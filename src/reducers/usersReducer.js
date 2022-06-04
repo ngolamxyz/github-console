@@ -43,7 +43,8 @@ export const toggleFollowUser = createAsyncThunk(
 const initialState = {
   userCount: 0,
   items: [],
-  search_query: ""
+  search_query: "",
+  loading: false
 };
 
 const usersSlice = createSlice({
@@ -52,14 +53,17 @@ const usersSlice = createSlice({
   reducers: {
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(updateQuery, (state, action) => {
+    builder.addCase(updateQuery, (state, action) => {
         state.search_query = action.payload
         window.history.replaceState(null, null, `?q=${action.payload}`);
       })
+    builder.addCase(queryUsers.pending, (state, action) => {
+      state.loading = true;
+    })
     builder.addCase(queryUsers.fulfilled, (state, action) => {
       state.items = action.payload.items
       state.userCount = action.payload.userCount
+      state.loading = false;
     })
     builder.addCase(toggleFollowUser.fulfilled, (state, action) => {
       const currUser = action.payload.user;
