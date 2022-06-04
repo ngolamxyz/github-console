@@ -29,8 +29,6 @@ export default function Footer() {
                     } else {
                         history.push('/liked')
                     }
-
-
                 }}
                 sx={{justifyContent: "space-between"}}
                 >

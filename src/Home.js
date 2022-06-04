@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Home.css';
 import TextField from '@mui/material/TextField';
 import ResultList from './components/SearchResult';
@@ -18,7 +18,7 @@ export default function Home() {
     dispatch(updateQuery(searchValue))
     loadData(searchValue)
   }
-  const loadData = debounce((searchValue) => {
+  const loadData = debounce(() => {
     dispatch(queryUsers())
   })
 
@@ -26,6 +26,13 @@ export default function Home() {
     dispatch(updateQuery(""))
     dispatch(queryUsers())
   }
+
+  useEffect(() => {
+    if (users.search_query) {
+      dispatch(updateQuery(users.search_query))
+    }
+  }, [])
+
   return (
     <Stack maxWidth="md" height={'100vh'}>
       <Stack>
@@ -61,6 +68,5 @@ export default function Home() {
       </Stack>
       <Footer/>
     </Stack>
-    
-  );
+  )
 }
