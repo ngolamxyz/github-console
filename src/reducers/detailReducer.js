@@ -18,6 +18,14 @@ export const queryRepos = createAsyncThunk(
     }
 )
 
+export const queryNextPageRepos = createAsyncThunk(
+    'userDetail/fetchNextPageRepos',
+    async ({ login, after}) => {
+        const response = await graphql.query({ query: REPO_DETAILS, variables: { login, after }, fetchPolicy: 'no-cache' });
+        return response.data.user.repositories
+    }
+)
+
 export const queryFollowers = createAsyncThunk(
     'userDetail/fetchFollowers',
     async ({ login, after}) => {
@@ -42,6 +50,13 @@ export const queryFollowings = createAsyncThunk(
     }
 )
 
+export const queryNextPageFollowing = createAsyncThunk(
+    'userDetail/fetchNextPageFollowings',
+    async ({login, after}) => {
+        const response = await graphql.query({ query: FOLLOWINGS_DETAILS, variables: { login, after } });
+        return response.data.user.following
+    }
+)
 
 const userDetailSlice = createSlice({
     name: "user",
@@ -62,16 +77,32 @@ const userDetailSlice = createSlice({
         builder.addCase(queryNextPageFollowers.pending, (state, action) => {
             state.followers.loading = true;
         })
+        builder.addCase(queryNextPageRepos.pending, (state, action) => {
+            state.repositories.loading = true;
+        })
+        builder.addCase(queryNextPageFollowing.pending, (state, action) => {
+            state.following.loading = true;
+        })
         builder.addCase(queryFollowers.fulfilled, (state, action) => {
             state.followers = action.payload
+        })
+        builder.addCase(queryFollowings.fulfilled, (state, action) => {
+            state.following = action.payload
         })
         builder.addCase(queryNextPageFollowers.fulfilled, (state, action) => {
             let newItems;
             newItems = state.followers.items.concat(action.payload.items)
             state.followers = { ...state.followers, items: newItems, loading: false, pageInfo: action.payload.pageInfo}
         })
-        builder.addCase(queryFollowings.fulfilled, (state, action) => {
-            state.followings = action.payload
+        builder.addCase(queryNextPageRepos.fulfilled, (state, action) => {
+            let newItems;
+            newItems = state.repositories.items.concat(action.payload.items)
+            state.repositories = { ...state.repositories, items: newItems, loading: false, pageInfo: action.payload.pageInfo}
+        })
+        builder.addCase(queryNextPageFollowing.fulfilled, (state, action) => {
+            let newItems;
+            newItems = state.following.items.concat(action.payload.items)
+            state.following = { ...state.following, items: newItems, loading: false, pageInfo: action.payload.pageInfo}
         })
     }
 

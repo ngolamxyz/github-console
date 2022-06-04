@@ -73,9 +73,9 @@ export const queryExtraUserDetail = async (match, req) => {
     let initialState = {
       user: {
         userDetail: {},
-        repositories: { items: []},
-        followers: { items: [], loading: false},
-        following: { items: []}
+        repositories: { items: [], loading: false, pageInfo: {}},
+        followers: { items: [], loading: false, pageInfo: {}},
+        following: { items: [], loading: false, pageInfo: {}}
       }
     };
     const login = username

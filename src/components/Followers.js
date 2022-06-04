@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Container } from "@mui/system";
+import { useEffect } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -37,6 +38,7 @@ export default function Followers({ username }) {
         );
     });
     return (
+        <Container>
             <Grid container spacing={2}>
                 {items}
                 {(followers.loading || followers.pageInfo.hasNextPage) && (
@@ -45,5 +47,7 @@ export default function Followers({ username }) {
                     </Grid>
                 )}
             </Grid>
+        </Container>
+            
     );
 }

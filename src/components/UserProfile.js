@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { queryUserDetail } from "../reducers/detailReducer";
+import LocationCityIcon from '@mui/icons-material/LocationCity';
 
 export function UserProfile() {
     const dispatch = useDispatch();
@@ -14,19 +15,16 @@ export function UserProfile() {
     }, [username]);
     return (
         <>
-            {user.userDetail
-                ? <Stack>
-                    <Avatar src={user.userDetail.avatarUrl} />
-                    <h2>{user.userDetail.name}</h2>
-                    <p>{user.userDetail.login}</p>
-                    <Stack direction="row">
-                        <svg>
-                            <use xlinkHref="/imgs/sprite.svg#location-icon" />
-                        </svg>
+            <Stack alignItems="center" spacing={1}>
+                <Avatar src={user.userDetail.avatarUrl} sx={{ width: 160, height: 160 }}/>
+                <h2>{user.userDetail.name}</h2>
+                <p>{user.userDetail.login}</p>
+                {user.userDetail.location &&
+                    <Stack direction={"row"} spacing={1}>
+                        <LocationCityIcon fontSize="large"/>
                         <p>{user.userDetail.location}</p>
-                    </Stack>
-                </Stack>
-                : ''}
+                    </Stack>}
+            </Stack>
         </>
     );
 }

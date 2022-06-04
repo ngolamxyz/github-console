@@ -1,21 +1,33 @@
 import { Grid } from "@mui/material";
+import { Container } from "@mui/system";
 import { useEffect } from "react";
+import useInfiniteScroll from "react-infinite-scroll-hook";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
-import { queryFollowings } from "../reducers/detailReducer";
+import { queryFollowings, queryNextPageFollowing } from "../reducers/detailReducer";
 import UserInfo from "./UserInfo";
 
 
 const Following = ({ username }) => {
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user);
+    const following = useSelector(state => state.user.following);
     const history = useHistory()
+
+    const [sentryRef] = useInfiniteScroll({
+        loading: following.loading,
+        hasNextPage: following.pageInfo.hasNextPage,
+        onLoadMore: () => { 
+            dispatch(queryNextPageFollowing({login: username, after: following.pageInfo.endCursor}))
+        },
+        // disabled: !!error,
+        rootMargin: '0px 0px 400px 0px',
+    });
 
     useEffect(() => {
         dispatch(queryFollowings(username));
-    }, []);
+    }, [username]);
 
-    const items = user.following.items.map(item => {
+    const items = following.items.map(item => {
         return (
             <Grid item key={item.id} xs={6}>
                 <UserInfo info={item}
@@ -25,9 +37,16 @@ const Following = ({ username }) => {
         );
     });
     return (
-        <Grid container spacing={2}>
-            {items}
-        </Grid>
+        <Container>
+            <Grid container spacing={2}>
+                {items}
+                {(following.loading || following.pageInfo.hasNextPage) && (
+                    <Grid item ref={sentryRef}>
+                        <h2>Loading....</h2>
+                    </Grid>
+                )}
+            </Grid>
+        </Container>
     );
 }
 
