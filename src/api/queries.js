@@ -80,6 +80,15 @@ query UserDetail($login: String!){
     avatarUrl
     name
     location
+    repositories {
+      totalCount
+    }
+    followers {
+      totalCount
+    }
+    following {
+      totalCount
+    }
   }
 }
 `

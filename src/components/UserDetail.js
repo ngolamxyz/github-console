@@ -1,5 +1,7 @@
 import { Stack } from "@mui/material"
+import { useSelector } from "react-redux"
 import { NavLink , Redirect, Route, Switch, useParams, useRouteMatch } from "react-router-dom"
+import nFormatter from "../utils/nFormatter"
 import Followers from "./Followers"
 import Following from "./Following"
 import Repositories from "./Repositories"
@@ -11,14 +13,15 @@ import { UserProfile } from "./UserProfile"
 export default function UserDetail() {
     let { path, url } = useRouteMatch()
     const params = useParams()
+    const user = useSelector(state => state.user.userDetail)
     const { username } = params
     return (
         <Stack>
             <UserProfile/>
             <Stack>
-                <NavLink to={`/users/${username}/repositories`} activeClassName="active">Repositories</NavLink>
-                <NavLink to={`/users/${username}/followers`} activeClassName="active">Followers</NavLink>
-                <NavLink to={`/users/${username}/following`} activeClassName="active">Followings</NavLink>
+                <NavLink to={`/users/${username}/repositories`} activeClassName="active">Repositories ({nFormatter(user.repositories.totalCount)})</NavLink>
+                <NavLink to={`/users/${username}/followers`} activeClassName="active">Followers ({nFormatter(user.followers.totalCount)})</NavLink>
+                <NavLink to={`/users/${username}/following`} activeClassName="active">Followings({nFormatter(user.following.totalCount)})</NavLink>
 
             </Stack>
             <Switch>

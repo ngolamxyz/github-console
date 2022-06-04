@@ -74,7 +74,7 @@ export const queryExtraUserDetail = async (match, req) => {
       user: {
         userDetail: {},
         repositories: { items: []},
-        followers: { items: []},
+        followers: { items: [], loading: false},
         following: { items: []}
       }
     };

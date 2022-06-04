@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FOLLOWERS_DETAILS, FOLLOWINGS_DETAILS, REPO_DETAILS, USER_DETAILS } from "../api/queries";
+import { hasNextPage as hasNextPageHelper } from "../utils/hasNextPage";
         
 export const queryUserDetail = createAsyncThunk(
     'userDetail/fetch',
@@ -19,8 +20,16 @@ export const queryRepos = createAsyncThunk(
 
 export const queryFollowers = createAsyncThunk(
     'userDetail/fetchFollowers',
-    async (login) => {
-        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login } });
+    async ({ login, after}) => {
+        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }, fetchPolicy: 'no-cache'});
+        return response.data.user.followers
+    }
+)
+
+export const queryNextPageFollowers = createAsyncThunk(
+    'userDetail/fetchNextPageFollowers',
+    async ({ login, after}) => {
+        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }, fetchPolicy: 'no-cache'});
         return response.data.user.followers
     }
 )
@@ -37,10 +46,10 @@ export const queryFollowings = createAsyncThunk(
 const userDetailSlice = createSlice({
     name: "user",
     initialState: {
-        userDetail: {},
+        userDetail: { followers: {}, following: {}, repositories: {}},
         repositories: { items: []},
-        followers: { items: []},
-        following: { items: []}
+        followers: { items: [], loading: false, pageInfo: {}},
+        following: { items: [], loading: false, pageInfo: {}}
     },
     reducers: { },
     extraReducers: (builder) => {
@@ -50,8 +59,16 @@ const userDetailSlice = createSlice({
         builder.addCase(queryRepos.fulfilled, (state, action) => {
             state.repositories = action.payload
         })
+        builder.addCase(queryNextPageFollowers.pending, (state, action) => {
+            state.followers.loading = true;
+        })
         builder.addCase(queryFollowers.fulfilled, (state, action) => {
             state.followers = action.payload
+        })
+        builder.addCase(queryNextPageFollowers.fulfilled, (state, action) => {
+            let newItems;
+            newItems = state.followers.items.concat(action.payload.items)
+            state.followers = { ...state.followers, items: newItems, loading: false, pageInfo: action.payload.pageInfo}
         })
         builder.addCase(queryFollowings.fulfilled, (state, action) => {
             state.followings = action.payload

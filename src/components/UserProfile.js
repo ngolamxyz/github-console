@@ -10,10 +10,8 @@ export function UserProfile() {
     const { username } = useParams();
 
     useEffect(() => {
-        if (!user.userDetail.login) {
-            dispatch(queryUserDetail(username));
-        }
-    }, []);
+        dispatch(queryUserDetail(username));
+    }, [username]);
     return (
         <>
             {user.userDetail
