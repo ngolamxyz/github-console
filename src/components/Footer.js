@@ -7,7 +7,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 export default function Footer() {
     const [value, setValue] = useState(0);
     const history = useHistory()
-    const { path, url } = useRouteMatch();
+    const { path } = useRouteMatch();
 
     useEffect(() => {
         if (path === '/') {
@@ -20,7 +20,6 @@ export default function Footer() {
     return (
         <Container maxWidth="md" sx={{height: '72px', boxShadow: "0px -4px 4px rgba(0, 0, 0, 0.05)"}}>
             <BottomNavigation
-                spa
                 showLabels
                 value={value}
                 onChange={(event, newValue) => {
