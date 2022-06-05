@@ -30,8 +30,8 @@ export const queryLikedUsers = async (match, req) => {
     let initialState = { 
       favorite: {
         items: [],
-        totalCount: 0,
-        pageInfo: {}
+        pageInfo: {},
+        fromServer: true
       }
     }
 

@@ -28,7 +28,7 @@ export const queryUsers = createAsyncThunk(
 )
 
 export const toggleFollowUser = createAsyncThunk(
-  'users/followUser',
+  'users/togglefollowUser',
   async (user) => {
     const mutation = user.viewerIsFollowing ? UNFOLLOW_A_USER : FOLLOW_A_USER;
     try {

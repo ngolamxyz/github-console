@@ -1,12 +1,13 @@
-import { Grid, Stack } from "@mui/material";
+import { Box, CircularProgress, Grid, Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { queryFavorites, queryNextPageFavorite } from "../reducers/favoriteReducer";
+import { queryFavorites, queryNextPageFavorite, setFromServer, unFollowUser } from "../reducers/favoriteReducer";
 import Footer from "./Footer";
 import Header from "./Header";
 import UserInfo from "./UserInfo";
 import PeopleIcon from '@mui/icons-material/People';
 import useInfiniteScroll from "react-infinite-scroll-hook";
+import { useEffect } from "react";
 
 export default function Favorite() {
     const dispatch = useDispatch()
@@ -21,12 +22,20 @@ export default function Favorite() {
         // disabled: !!error,
         rootMargin: '0px 0px 200px 0px',
     });
+    useEffect(() => {
+        if (favorite.fromServer) {
+            dispatch(setFromServer())
+            return;
+        }
+        dispatch(queryFavorites())
+    }, [])
+
     const users = favorite.items.map(user => {
         return (
             <Grid item key={ user.id } xs={6}>
                 <UserInfo info={ user }
                 onClick={() => history.push(`/users/${user.login}`)}
-                afterToggle={() => dispatch(queryFavorites())}/>
+                onToggleFollowing={() => dispatch(unFollowUser(user))}/>
             </Grid>
         )
     })
@@ -42,9 +51,7 @@ export default function Favorite() {
                         overflow: "auto"}}>
                         {users}
                         {(favorite.loading || favorite.pageInfo.hasNextPage) && (
-                            <div ref={sentryRef}>
-                                <h2>Loading....</h2>
-                            </div>
+                            <Box ref={sentryRef} sx={{display: 'flex', justifyContent: 'center', width: "100%"}}><CircularProgress/></Box>
                         )}
                     </Grid>
                     : <Stack color={"#8b8a8b"} alignItems="center" justifyContent={"center"}>
