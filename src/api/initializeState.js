@@ -29,10 +29,9 @@ export const queryLikedUsers = async (match, req) => {
     const { user } = req
     let initialState = { 
       favorite: {
-        followingUsers: [],
+        items: [],
         totalCount: 0,
-        pageInfo: {},
-        numberOfPages: 1
+        pageInfo: {}
       }
     }
 

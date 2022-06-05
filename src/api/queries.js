@@ -49,7 +49,7 @@ query Favorite($login: String!, $after: String, $before: String) {
   user(login: $login) {
     id
     following(first: ${ITEMS_PER_PAGE}, after: $after, before: $before) {
-      followingUsers: nodes {
+      items: nodes {
         login
         id
         avatarUrl

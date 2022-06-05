@@ -3,30 +3,37 @@ import { FETCH_FAVORITE } from "../api/queries";
         
 export const queryFavorites = createAsyncThunk(
     'favorite/fetch',
-    async (direction, { getState }) => {
-        const pageInfo = getState().favorite.pageInfo
-        let variables;
-        if (direction === "NEXT") {
-            variables = { login: profile.username, after: pageInfo.endCursor }
-        } else if(direction === 'PREV') {
-            variables = { login: profile.username, before: pageInfo.startCursor }
-        } else {
-            variables = { login: profile.username }
-        }
-
-        const response = await graphql.query({ query: FETCH_FAVORITE, variables, fetchPolicy: "no-cache"});
+    async () => {
+        const variables = { login: profile.username }
+        const response = await graphql.query({ query: FETCH_FAVORITE, variables });
         return response.data.user.following
     }
 )
 
+export const queryNextPageFavorite = createAsyncThunk(
+    'favorite/fetchNextPage',
+    async (after) => {
+        const variables = { login: profile.username, after }
+        const response = await graphql.query({ query: FETCH_FAVORITE, variables });
+        return response.data.user.following
+    }
+)
+
+
 const favoriteSlice = createSlice({
     name: "favorite",
-    initialState: { followingUsers: [], totalCount: 0, pageInfo: {}, numberOfPages: 1 },
+    initialState: { items: [], totalCount: 0, pageInfo: {}, loading: false },
     reducers: { },
     extraReducers: (builder) => {
         builder.addCase(queryFavorites.fulfilled, (state, action) => {
-            const data = action.payload
-            return {...state, ...data }
+            state = action.payload
+        })
+        builder.addCase(queryNextPageFavorite.pending, (state, action) => {
+            state.loading = true
+        })
+        builder.addCase(queryNextPageFavorite.fulfilled, (state, action) => {
+            const newItems = action.payload.items
+            return {...state, items: state.items.concat(newItems), pageInfo: action.payload.pageInfo, loading: false}
         })
     }
 

@@ -4,15 +4,17 @@ import TextField from '@mui/material/TextField';
 import ResultList from './components/SearchResult';
 import { useDispatch, useSelector } from 'react-redux';
 import { queryUsers, updateQuery } from './reducers/usersReducer';
-import { Box, CircularProgress, debounce, InputAdornment, Stack } from '@mui/material';
+import { Box, CircularProgress, debounce, InputAdornment, Pagination, Stack } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { ITEMS_PER_PAGE, MAX_PAGES } from './utils/contants';
 
 export default function Home() {
   const users = useSelector(state => state.users)
   const dispatch = useDispatch()
+  const numberOfPages = Math.min(Math.ceil(parseInt(users.userCount)/ITEMS_PER_PAGE), MAX_PAGES)
   const handleSearch = (event) => {
     const searchValue = event.target.value;
     dispatch(updateQuery(searchValue))
@@ -27,11 +29,9 @@ export default function Home() {
     dispatch(queryUsers())
   }
 
-  useEffect(() => {
-    if (users.search_query) {
-      dispatch(updateQuery(users.search_query))
-    }
-  }, [])
+  const handlePaging = (event, pageNumber) => {
+      dispatch(queryUsers(pageNumber))
+  }
 
   return (
     <Stack maxWidth="md" height={'100vh'}>
@@ -51,7 +51,7 @@ export default function Home() {
           }}
           onChange={handleSearch} value={users.search_query} type="text" autoFocus />
       </Stack>
-      <Stack sx={{flex: 1}} justifyContent="center">
+      <Stack sx={{flex: 1, paddingBottom: "10px"}} justifyContent="center">
         {users.loading
         ?  <Box sx={{display: 'flex', justifyContent: 'center'}}><CircularProgress/></Box>
         : <>
@@ -62,10 +62,13 @@ export default function Home() {
               <GitHubIcon sx={{width: '120px', height: '120px', color: "#8b8a8b"}}/>
               <h1>GitHub</h1>
               <Box maxWidth={"sm"} sx={{width: '390px'}}>Enter GitHub username and search users matching the input like Google Search, click avatars to view more details, including repositories, followers and following.</Box>
-            </Stack>
-        }
+            </Stack>}
           </>}
       </Stack>
+      { users.search_query
+        &&<Box sx={{display: "flex", justifyContent: "center", paddingBottom: "10px"}}>
+        <Pagination count={numberOfPages} variant="outlined" shape="rounded" onChange={handlePaging}/>
+      </Box> }
       <Footer/>
     </Stack>
   )
