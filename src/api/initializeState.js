@@ -10,7 +10,8 @@ export const queryUsers = async (match, req) => {
       users: {
         userCount: 0,
         items: [],
-        search_query: query
+        search_query: query,
+        pageNumber: 1
       }
     }
     if (!query) return initialState

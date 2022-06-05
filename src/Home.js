@@ -3,7 +3,7 @@ import './Home.css';
 import TextField from '@mui/material/TextField';
 import ResultList from './components/SearchResult';
 import { useDispatch, useSelector } from 'react-redux';
-import { queryUsers, updateQuery } from './reducers/usersReducer';
+import { queryUsers, setPageNumber, updateQuery } from './reducers/usersReducer';
 import { Box, CircularProgress, debounce, InputAdornment, Pagination, Stack } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -30,6 +30,7 @@ export default function Home() {
   }
 
   const handlePaging = (event, pageNumber) => {
+      dispatch(setPageNumber(pageNumber))
       dispatch(queryUsers(pageNumber))
   }
 
@@ -67,7 +68,7 @@ export default function Home() {
       </Stack>
       { users.search_query
         &&<Box sx={{display: "flex", justifyContent: "center", paddingBottom: "10px"}}>
-        <Pagination count={numberOfPages} variant="outlined" shape="rounded" onChange={handlePaging}/>
+        <Pagination count={numberOfPages} variant="outlined" shape="rounded" onChange={handlePaging} page={users.pageNumber}/>
       </Box> }
       <Footer/>
     </Stack>

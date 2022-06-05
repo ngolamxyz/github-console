@@ -1,9 +1,9 @@
-import SearchIcon from '@mui/icons-material/Search';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { BottomNavigation, BottomNavigationAction, Container, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import SearchIcon from '@mui/icons-material/Search';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 export default function Footer() {
     const [value, setValue] = useState(0);

@@ -44,13 +44,17 @@ const initialState = {
   userCount: 0,
   items: [],
   search_query: "",
-  loading: false
+  loading: false,
+  pageNumber: 1
 };
 
 const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
+    setPageNumber: (state, action) => { 
+      state.pageNumber = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(updateQuery, (state, action) => {
@@ -77,5 +81,7 @@ const usersSlice = createSlice({
     })
   },
 })
+
+export const { setPageNumber } = usersSlice.actions
 
 export default usersSlice.reducer;

@@ -42,7 +42,7 @@ export default function Favorite() {
 
     return (
         <Stack maxWidth="md" height={'100vh'}>
-            <Header title="Search"/>
+            <Header title="Favorite"/>
             <Stack justifyContent="center" ref={rootRef} mx={{marginBottom: "auto"}}>
                 {users.length > 0
                     ?<Grid container spacing={2} ref={rootRef} sx={{
