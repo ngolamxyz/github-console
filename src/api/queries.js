@@ -123,6 +123,7 @@ query FollowersDetails($login: String!, $after: String, $before: String){
       totalCount
       items: nodes {
         id
+        createdAt
         avatarUrl
         login
         followers {

@@ -1,10 +1,10 @@
-import { Grid } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import { Container } from "@mui/system";
 import { useEffect } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { queryFollowers, queryNextPageFollowers } from "../reducers/detailReducer";
+import { queryFollowers, queryNextPageFollowers, setFromServerFollowers, toggleFollowUser } from "../reducers/detailReducer";
 import UserInfo from "./UserInfo";
 
 
@@ -25,15 +25,19 @@ export default function Followers({ username }) {
     });
 
     useEffect(() => {
+        if (followers.fromServer) {
+            dispatch(setFromServerFollowers())
+            return;
+        }
         dispatch(queryFollowers({ login: username }));
     }, [username]);
 
     const items = followers.items.map(item => {
         return (
-            <Grid item key={item.id} xs={6}>
+            <Grid item key={item.id + item.createdAt} xs={6}>
                 <UserInfo info={item}
                 onClick={() => history.push(`/users/${item.login}`)}
-                afterToggle={() => dispatch(queryFollowers({ login: username }))}/>
+                onToggleFollowing={() => dispatch(toggleFollowUser(item))}/>
             </Grid>
         );
     });
@@ -42,9 +46,7 @@ export default function Followers({ username }) {
             <Grid container spacing={2}>
                 {items}
                 {(followers.loading || followers.pageInfo.hasNextPage) && (
-                    <Grid item ref={sentryRef}>
-                        <h2>Loading....</h2>
-                    </Grid>
+                    <Box ref={sentryRef} sx={{display: 'flex', justifyContent: 'center', width: "100%"}}><CircularProgress/></Box>
                 )}
             </Grid>
         </Container>

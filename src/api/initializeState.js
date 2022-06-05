@@ -47,35 +47,15 @@ export const queryLikedUsers = async (match, req) => {
     return initialState
 }
 
-export const queryUserDetail = async (match, req) => {
-    const { user } = req
-    let initialState =  {
-      user: {
-        userDetail: {} 
-      }
-    }
-    const login = match.params.username
-
-    const graphql = setUpGraphql(user.accessToken)
-    try {
-      const response = await graphql.query({ query: USER_DETAILS, variables: { login } });
-      const data = response.data.user
-      initialState.user.userDetail = data
-    } catch(err) {
-      console.log(err);
-    }
-    return initialState
-}
-
 export const queryExtraUserDetail = async (match, req) => {
     const { user } = req
     const { username, category } = match.params
     let initialState = {
       user: {
-        userDetail: {},
-        repositories: { items: [], loading: false, pageInfo: {}},
-        followers: { items: [], loading: false, pageInfo: {}},
-        following: { items: [], loading: false, pageInfo: {}}
+        userDetail: { fromServer: true },
+        repositories: { items: [], loading: false, pageInfo: {}, fromServer: false},
+        followers: { items: [], loading: false, pageInfo: {}, fromServer: false},
+        following: { items: [], loading: false, pageInfo: {}, fromServer: false}
       }
     };
     const login = username
@@ -93,17 +73,22 @@ export const queryExtraUserDetail = async (match, req) => {
     }
 
     const graphql = setUpGraphql(user.accessToken)
+    let userData, extraData;
     try {
       const responses = await Promise.all([
         graphql.query({ query: USER_DETAILS, variables: { login } }),
         graphql.query({ query: queryExtra, variables: { login } })
       ])
-      const userData = responses[0].data.user
-      const extraData = responses[1].data.user[category]
-      initialState.user.userDetail = userData;
-      initialState.user[category] = extraData;
+      userData = responses[0].data.user
+      extraData = responses[1].data.user[category]
     } catch(err) {
       console.log(err);
     }
-    return initialState
+    return {
+      user: {
+        ...initialState.user,
+        userDetail: {...initialState.user.userDetail, ...userData},
+        [category]: { ...initialState.user[category], ...extraData, fromServer: true}
+      }
+    }
 }

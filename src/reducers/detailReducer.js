@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FOLLOWERS_DETAILS, FOLLOWINGS_DETAILS, REPO_DETAILS, USER_DETAILS } from "../api/queries";
+import { FOLLOWERS_DETAILS, FOLLOWINGS_DETAILS, FOLLOW_A_USER, REPO_DETAILS, UNFOLLOW_A_USER, USER_DETAILS } from "../api/queries";
         
 export const queryUserDetail = createAsyncThunk(
     'userDetail/fetch',
@@ -20,7 +20,7 @@ export const queryRepos = createAsyncThunk(
 export const queryNextPageRepos = createAsyncThunk(
     'userDetail/fetchNextPageRepos',
     async ({ login, after}) => {
-        const response = await graphql.query({ query: REPO_DETAILS, variables: { login, after }, fetchPolicy: 'no-cache' });
+        const response = await graphql.query({ query: REPO_DETAILS, variables: { login, after }});
         return response.data.user.repositories
     }
 )
@@ -28,7 +28,7 @@ export const queryNextPageRepos = createAsyncThunk(
 export const queryFollowers = createAsyncThunk(
     'userDetail/fetchFollowers',
     async ({ login, after}) => {
-        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }, fetchPolicy: 'no-cache'});
+        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }});
         return response.data.user.followers
     }
 )
@@ -36,7 +36,7 @@ export const queryFollowers = createAsyncThunk(
 export const queryNextPageFollowers = createAsyncThunk(
     'userDetail/fetchNextPageFollowers',
     async ({ login, after}) => {
-        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }, fetchPolicy: 'no-cache'});
+        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }});
         return response.data.user.followers
     }
 )
@@ -57,15 +57,55 @@ export const queryNextPageFollowing = createAsyncThunk(
     }
 )
 
+export const toggleFollowUser = createAsyncThunk(
+  'userDetail/togglefollowUser',
+  async (user) => {
+    const mutation = user.viewerIsFollowing ? UNFOLLOW_A_USER : FOLLOW_A_USER;
+    try {
+      const response = await graphql.mutate({ mutation, variables: { userId: user.id }});
+      return response.data.result
+    } catch(err) {
+      console.log("APP.ERRR: ", err)
+    }
+  }
+)
+
+export const toggleFollowUserFollowingTab = createAsyncThunk(
+  'userDetail/togglefollowUserFollowingTab',
+  async (user) => {
+    const mutation = user.viewerIsFollowing ? UNFOLLOW_A_USER : FOLLOW_A_USER;
+    try {
+      const response = await graphql.mutate({ mutation, variables: { userId: user.id }});
+      return response.data.result
+    } catch(err) {
+      console.log("APP.ERRR: ", err)
+    }
+  }
+)
+
 const userDetailSlice = createSlice({
     name: "user",
     initialState: {
+        fromServer: false,
         userDetail: { followers: {}, following: {}, repositories: {}},
         repositories: { items: [], loading: false, pageInfo: {}},
         followers: { items: [], loading: false, pageInfo: {}},
         following: { items: [], loading: false, pageInfo: {}}
     },
-    reducers: { },
+    reducers: { 
+        setFromServerUserDetail: (state, action) => {
+            state.userDetail.fromServer = false
+        },
+        setFromServerRepositories: (state, action) => {
+            state.repositories.fromServer = false
+        },
+        setFromServerFollowers: (state, action) => {
+            state.followers.fromServer = false
+        },
+        setFromServerFollowing: (state, action) => {
+            state.following.fromServer = false
+        }
+     },
     extraReducers: (builder) => {
         builder.addCase(queryUserDetail.fulfilled, (state, action) => {
             state.userDetail = action.payload
@@ -103,8 +143,30 @@ const userDetailSlice = createSlice({
             newItems = state.following.items.concat(action.payload.items)
             state.following = { ...state.following, items: newItems, loading: false, pageInfo: action.payload.pageInfo}
         })
+        builder.addCase(toggleFollowUser.fulfilled, (state, action) => {
+            const currUser = action.payload.user;
+            state.followers.items = state.followers.items.map(user => {
+                if (user.id === currUser.id) {
+                    return {...user, viewerIsFollowing: currUser.viewerIsFollowing}
+                } else {
+                    return user;
+                }
+            })
+        })
+        builder.addCase(toggleFollowUserFollowingTab.fulfilled, (state, action) => {
+            const currUser = action.payload.user;
+            state.following.items = state.following.items.map(user => {
+                if (user.id === currUser.id) {
+                    return {...user, viewerIsFollowing: currUser.viewerIsFollowing}
+                } else {
+                    return user;
+                }
+            })
+        })
     }
 
 })
+
+export const { setFromServerUserDetail, setFromServerFollowers, setFromServerFollowing, setFromServerRepositories } = userDetailSlice.actions
 
 export default userDetailSlice.reducer;

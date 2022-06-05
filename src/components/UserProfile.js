@@ -2,7 +2,7 @@ import { Avatar, Stack } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { queryUserDetail } from "../reducers/detailReducer";
+import { queryUserDetail, setFromServerUserDetail } from "../reducers/detailReducer";
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 
 export function UserProfile() {
@@ -11,6 +11,10 @@ export function UserProfile() {
     const { username } = useParams();
 
     useEffect(() => {
+        if (user.userDetail.fromServer) {
+            dispatch(setFromServerUserDetail())
+            return;
+        }
         dispatch(queryUserDetail(username));
     }, [username]);
     return (

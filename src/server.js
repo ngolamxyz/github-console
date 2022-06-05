@@ -7,7 +7,7 @@ import { renderToString } from 'react-dom/server';
 import { matchPath } from "react-router-dom";
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import usersReducer from './reducers/usersReducer'
-import { queryExtraUserDetail, queryLikedUsers, queryUserDetail, queryUsers } from './api/initializeState';
+import { queryExtraUserDetail, queryLikedUsers, queryUsers } from './api/initializeState';
 import favoriteReducer from './reducers/favoriteReducer';
 import detailReducer from './reducers/detailReducer';
 import { CacheProvider } from '@emotion/react';
@@ -32,7 +32,7 @@ const routes = [
   {
     path: "/users/:username",
     exact: true,
-    initializeState : (match, req) => queryUserDetail(match, req)
+    initializeState : (match, req) => queryExtraUserDetail(match, req)
   },
   {
     path: "/users/:username/:category",

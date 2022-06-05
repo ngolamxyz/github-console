@@ -1,9 +1,9 @@
-import { Grid } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import { Container } from "@mui/system";
 import { useEffect } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import { useDispatch, useSelector } from "react-redux";
-import { queryNextPageRepos, queryRepos } from "../reducers/detailReducer";
+import { queryNextPageRepos, queryRepos, setFromServerRepositories } from "../reducers/detailReducer";
 import RepoInfo from "./RepoInfo";
 
 
@@ -22,6 +22,10 @@ export default function Repositories({ username }) {
     });
 
     useEffect(() => {
+        if (repos.fromServer) {
+            dispatch(setFromServerRepositories())
+            return;
+        }
         dispatch(queryRepos(username));
     }, [username]);
 
@@ -37,9 +41,7 @@ export default function Repositories({ username }) {
             <Grid container spacing={2}>
                 {items}
                 {(repos.loading || repos.pageInfo.hasNextPage) && (
-                    <Grid item ref={sentryRef}>
-                        <h2>Loading....</h2>
-                    </Grid>
+                    <Box ref={sentryRef} sx={{display: 'flex', justifyContent: 'center', width: "100%"}}><CircularProgress/></Box>
                 )}
             </Grid>
         </Container>

@@ -1,4 +1,4 @@
-import { Avatar, Box, Paper, Rating, Stack, styled } from "@mui/material";
+import { Avatar, Box, Paper, Rating, Stack, styled, Typography } from "@mui/material";
 import nFormatter from "../utils/nFormatter";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -34,17 +34,17 @@ export default function UserInfo({ info, onToggleFollowing, onClick }) {
                     borderRadius: "10px"
                 }}}/>
                 <Stack justifyContent={"space-between"} sx={{padding: "5px 0"}}>
-                    <Box sx={{
+                    <Typography sx={{
                         fontWeight: "700",
                         lineHeight: "24px"
-                    }}>{info.login}</Box>
+                    }}>{info.login}</Typography>
                     <Stack sx={{
                         fontSize: "12px",
                         fontWeight: "normal",
                         lineHeight: "16px"
                     }}>
-                        <Box>{info.followers ? nFormatter(info.followers.totalCount, 1) : 0 } followers</Box>
-                        <Box>{info.following ? nFormatter(info.following.totalCount, 1) : 0 } followings</Box>
+                        <Typography fontSize={"12px"} fontWeight="normal" lineHeight={"16px"}>{info.followers ? nFormatter(info.followers.totalCount, 1) : 0 } followers</Typography>
+                        <Typography fontSize={"12px"} fontWeight="normal" lineHeight={"16px"}>{info.following ? nFormatter(info.following.totalCount, 1) : 0 } followings</Typography>
                     </Stack>
                 </Stack>
                 <Box sx={{

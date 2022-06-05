@@ -1,12 +1,22 @@
-import { Paper, Stack } from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
 export default function RepoInfo({ info }) {
     return (
-        <Paper>
-            <Stack>
-                <h2>{ info.name }</h2>
+        <Paper sx={{
+            "&.MuiPaper-rounded": {
+                borderRadius: "15px"
+            }
+        }}>
+            <Stack justifyContent={"space-between"} sx={{
+                padding: "10px",
+                height: "90px"
+            }}>
+                <Typography sx={{
+                    fontWeight: "700",
+                    lineHeight: "24px",
+                }}>{info.name}</Typography>
                 <Stack>
-                    <p>{ info.stargazerCount } stars</p>
-                    <p>{ info.forkCount } forks</p>
+                    <Typography fontSize={"12px"} fontWeight="normal" lineHeight="16px">{ info.stargazerCount } stars</Typography>
+                    <Typography fontSize={"12px"} fontWeight="normal" lineHeight="16px">{ info.forkCount } forks</Typography>
                 </Stack>
 
             </Stack>
