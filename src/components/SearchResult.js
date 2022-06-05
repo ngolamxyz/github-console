@@ -1,15 +1,19 @@
 import { Grid, Stack } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import SearchIcon from '@mui/icons-material/Search';
+import { toggleFollowUser } from "../reducers/usersReducer";
 
 export default function ResultList() {
     const usersData = useSelector(state => state.users)
     const history = useHistory()
+    const dispatch = useDispatch()
     const gridItems = usersData.items.map(user =>
         <Grid item key={ user.id } xs={6}>
-            <UserInfo info={ user } onClick={() => history.push(`/users/${user.login}`)}/>
+            <UserInfo info={ user }
+             onToggleFollowing={() => dispatch(toggleFollowUser(user))}
+             onClick={() => history.push(`/users/${user.login}`)}/>
         </Grid>
         )
     return (

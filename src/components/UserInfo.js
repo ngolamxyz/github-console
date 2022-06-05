@@ -1,77 +1,70 @@
-import { Avatar, Paper } from "@mui/material";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
-import { toggleFollowUser } from "../reducers/usersReducer";
+import { Avatar, Box, Paper, Rating, Stack, styled } from "@mui/material";
 import nFormatter from "../utils/nFormatter";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-const UserBox = styled(Paper)
-(({ theme, round }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: 'center',
-//   color: theme.palette.text.secondary,
-}));
+const StyledRating = styled(Rating)({
+  '& .MuiRating-iconFilled': {
+    color: '#ff6d75',
+  },
+  '& .MuiRating-iconHover': {
+    color: '#ff3d47',
+  },
+});
 
-const StyledBox = styled(UserBox)`
-    display: flex;
-    align-items: center;
-    position: relative;
-    &.MuiPaper-rounded {
-        border-radius: 15px;
-    }
-    .avatar {
-        width: 90px;
-        height: 90px;
-        margin-right: 10px;
-        padding: 6px;
-        .MuiAvatar-img {
-            border-radius: 10px;
-        }
-    }
-    .following-icon {
-        width: 22px;
-        height: 22px;
-        position: absolute;
-        top: 10px;
-        right: 5px;
-    }
-    .details {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 70px;
-    }
-    .following-details {
-        font-size: 12px;
-        font-weight: normal;
-        line-height: 16px;
-    }
-    .username {
-        font-weight: 700;
-        line-height: 24px;
-    }
-
-`
-
-export default function UserInfo({ info, afterToggle, onClick }) {
-    const dispatch = useDispatch()
-    const toggleFollowing = () => {
-        dispatch(toggleFollowUser(info)).then(() => afterToggle ? afterToggle() : null)
+export default function UserInfo({ info, onToggleFollowing, onClick }) {
+    const toggleFollowing = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        onToggleFollowing()
     }
     return (
-        <StyledBox onClick={onClick}>
-            <Avatar className="avatar" src={info.avatarUrl} alt={info.login} variant="rounded"/>
-            <div className="details">
-                <div className="username">{info.login}</div>
-                <div className="following-details">
-                    <div className="following-details--followers">{info.followers ? nFormatter(info.followers.totalCount, 1) : 0 } followers</div>
-                    <div className="following-details--followings">{info.following ? nFormatter(info.following.totalCount, 1) : 0 } followings</div>
-                </div>
-            </div>
-            <svg className="following-icon" onClick={toggleFollowing}>
-                <use xlinkHref={ `/imgs/sprite.svg#${info.viewerIsFollowing ? 'following-icon' : 'unfollowing-icon'}` } />
-            </svg>
-        </StyledBox>
+        <Paper sx={{
+            "&.MuiPaper-rounded": {
+                borderRadius: "15px"
+            },
+            position: "relative",
+            cursor: "pointer"
+        }}>
+            <Stack onClick={onClick} direction="row">
+                <Avatar src={info.avatarUrl} alt={info.login} variant="rounded"
+                sx={{width: "90px",
+                    marginRight: "10px",
+                    height: "90px", padding: "6px", ".MuiAvatar-img": {
+                    borderRadius: "10px"
+                }}}/>
+                <Stack justifyContent={"space-between"} sx={{padding: "5px 0"}}>
+                    <Box sx={{
+                        fontWeight: "700",
+                        lineHeight: "24px"
+                    }}>{info.login}</Box>
+                    <Stack sx={{
+                        fontSize: "12px",
+                        fontWeight: "normal",
+                        lineHeight: "16px"
+                    }}>
+                        <Box>{info.followers ? nFormatter(info.followers.totalCount, 1) : 0 } followers</Box>
+                        <Box>{info.following ? nFormatter(info.following.totalCount, 1) : 0 } followings</Box>
+                    </Stack>
+                </Stack>
+                <Box sx={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "5px",
+                    cursor: "pointer",
+                    color: "#F44336"
+                }} onClick={toggleFollowing}>
+                     <StyledRating
+                        name="customized-color"
+                        value={info.viewerIsFollowing ? 1 : 0}
+                        max={1}
+                        precision={1}
+                        icon={<FavoriteIcon fontSize="inherit" />}
+                        emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                    />
+                </Box>
+            </Stack>
+        </Paper>
+        
     )
 }
