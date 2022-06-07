@@ -1,12 +1,4 @@
-import { createAction, createReducer, isRejected } from '@reduxjs/toolkit'
-
-export const rtkQueryErrorLogger = (api) => (next) => (action) => {
-  if (isRejected(action)) {
-      next(showError(action.error.message))
-  }
-
-  return next(action)
-}
+import { createAction, createReducer } from '@reduxjs/toolkit'
 
 export const showError = createAction('error/showError');
 export const closeError = createAction('error/closeError');

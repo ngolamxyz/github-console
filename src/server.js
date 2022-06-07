@@ -1,5 +1,5 @@
 import App from './App';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import express from 'express';
@@ -82,19 +82,18 @@ export const renderApp = async (req, res, next) => {
   const { extractCriticalToChunks, constructStyleTagsFromChunks } =
     createEmotionServer(cache);
 
-
   const context = {};
   const markup = renderToString(
-    <ThemeProvider theme={theme}>
       <CacheProvider value={cache}>
-        <StaticRouter context={context} location={req.url}>
-          <Provider store={store}>
-            <CssBaseline/>
-            <App />
-          </Provider>
-        </StaticRouter>
+        <ThemeProvider theme={theme}>
+            <StaticRouter context={context} location={req.url}>
+              <Provider store={store}>
+                <CssBaseline/>
+                <App />
+              </Provider>
+            </StaticRouter>
+        </ThemeProvider>
       </CacheProvider>
-    </ThemeProvider>
   );
 
   const emotionChunks = extractCriticalToChunks(markup)
