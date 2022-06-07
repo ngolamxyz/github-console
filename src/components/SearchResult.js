@@ -10,7 +10,7 @@ export default function ResultList() {
     const history = useHistory()
     const dispatch = useDispatch()
     const gridItems = usersData.items.map(user =>
-        <Grid item key={ user.id } xs={6}>
+        <Grid item key={ user.id } xs={12} sm={6} md={4}>
             <UserInfo info={ user }
              onToggleFollowing={() => dispatch(toggleFollowUser(user))}
              onClick={() => history.push(`/users/${user.login}`)}/>
@@ -19,7 +19,7 @@ export default function ResultList() {
     return (
         <Stack alignItems={"center"}>
         {gridItems.length > 0
-            ?  <Grid container spacing={2} maxWidth={"md"}>
+            ?  <Grid container spacing={1} maxWidth={"md"}>
                 {gridItems}
                 </Grid>
             : (!usersData.loading && 

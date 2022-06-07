@@ -32,7 +32,7 @@ export default function Favorite() {
 
     const users = favorite.items.map(user => {
         return (
-            <Grid item key={ user.id } xs={6}>
+            <Grid item key={ user.id } xs={12} sm={6} md={4}>
                 <UserInfo info={ user }
                 onClick={() => history.push(`/users/${user.login}`)}
                 onToggleFollowing={() => dispatch(unFollowUser(user))}/>
@@ -45,7 +45,7 @@ export default function Favorite() {
             <Header title="Favorite"/>
             <Stack justifyContent="center" ref={rootRef} mx={{marginBottom: "auto"}}>
                 {users.length > 0
-                    ?<Grid container spacing={2} ref={rootRef} sx={{
+                    ?<Grid container spacing={1} ref={rootRef} sx={{
                         maxHeight: 700,
                         padding: "0 0 10px 0",
                         overflow: "auto"}}>

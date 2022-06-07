@@ -33,7 +33,7 @@ const Following = ({ username }) => {
 
     const items = following.items.map(item => {
         return (
-            <Grid item key={item.id} xs={6}>
+            <Grid item key={item.id} xs={12} sm={6} md={4}>
                 <UserInfo info={item}
                 onClick={() => history.push(`/users/${item.login}`)}
                 onToggleFollowing={() => dispatch(toggleFollowUserFollowingTab(item))}/>
@@ -42,7 +42,7 @@ const Following = ({ username }) => {
     });
     return (
         <Container>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 {items}
                 {(following.loading || following.pageInfo.hasNextPage) && (
                     <Box ref={sentryRef} sx={{display: 'flex', justifyContent: 'center', width: "100%"}}><CircularProgress/></Box>

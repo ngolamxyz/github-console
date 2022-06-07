@@ -31,14 +31,14 @@ export default function Repositories({ username }) {
 
     const items = repos.items.map(item => {
         return (
-            <Grid item key={item.id} xs={6}>
+            <Grid item key={item.id} xs={12} sm={6} md={4}>
                 <RepoInfo info={item} />
             </Grid>
         );
     });
     return (
         <Container>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 {items}
                 {(repos.loading || repos.pageInfo.hasNextPage) && (
                     <Box ref={sentryRef} sx={{display: 'flex', justifyContent: 'center', width: "100%"}}><CircularProgress/></Box>

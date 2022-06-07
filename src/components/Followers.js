@@ -34,7 +34,7 @@ export default function Followers({ username }) {
 
     const items = followers.items.map(item => {
         return (
-            <Grid item key={item.id + item.createdAt} xs={6}>
+            <Grid item key={item.id + item.createdAt} xs={12} sm={6} md={4}>
                 <UserInfo info={item}
                 onClick={() => history.push(`/users/${item.login}`)}
                 onToggleFollowing={() => dispatch(toggleFollowUser(item))}/>
@@ -43,7 +43,7 @@ export default function Followers({ username }) {
     });
     return (
         <Container>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 {items}
                 {(followers.loading || followers.pageInfo.hasNextPage) && (
                     <Box ref={sentryRef} sx={{display: 'flex', justifyContent: 'center', width: "100%"}}><CircularProgress/></Box>
