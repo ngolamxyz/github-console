@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import { hydrate } from 'react-dom';
 import { Provider } from 'react-redux'
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, createStore } from '@reduxjs/toolkit';
 import { ApolloProvider } from '@apollo/client';
 import setUpGraphql from './api';
 import usersReducer from './reducers/usersReducer'
@@ -13,6 +13,9 @@ import createEmotionCache from './utils/createEmotionCache';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from 'styled-components';
 import theme from './theme'
+import errorReducer, { rtkQueryErrorLogger } from './reducers/errorsHandler';
+import { CssBaseline } from '@mui/material';
+import Message from './components/Message';
 
 const cache = createEmotionCache()
 
@@ -21,9 +24,12 @@ const store = configureStore({
   reducer: combineReducers({
     users: usersReducer,
     favorite: favoriteReducer,
-    user: detailReducer
+    user: detailReducer,
+    error: errorReducer
   }),
-  preloadedState: window.__PRELOADED_STATE__
+  preloadedState: window.__PRELOADED_STATE__,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(rtkQueryErrorLogger),
+
 })
 
 const token = window.__GITHUB_TOKEN__
@@ -37,6 +43,8 @@ hydrate(
         <ApolloProvider client={graphql}>
           <CacheProvider value={cache}>
             <ThemeProvider theme={theme}>
+              <CssBaseline/>
+              <Message/>
               <App />
             </ThemeProvider>
           </CacheProvider>

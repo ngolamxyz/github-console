@@ -61,12 +61,8 @@ export const toggleFollowUser = createAsyncThunk(
   'userDetail/togglefollowUser',
   async (user) => {
     const mutation = user.viewerIsFollowing ? UNFOLLOW_A_USER : FOLLOW_A_USER;
-    try {
-      const response = await graphql.mutate({ mutation, variables: { userId: user.id }});
-      return response.data.result
-    } catch(err) {
-      console.log("APP.ERRR: ", err)
-    }
+    const response = await graphql.mutate({ mutation, variables: { userId: user.id }});
+    return response.data.result
   }
 )
 
@@ -74,12 +70,8 @@ export const toggleFollowUserFollowingTab = createAsyncThunk(
   'userDetail/togglefollowUserFollowingTab',
   async (user) => {
     const mutation = user.viewerIsFollowing ? UNFOLLOW_A_USER : FOLLOW_A_USER;
-    try {
-      const response = await graphql.mutate({ mutation, variables: { userId: user.id }});
-      return response.data.result
-    } catch(err) {
-      console.log("APP.ERRR: ", err)
-    }
+    const response = await graphql.mutate({ mutation, variables: { userId: user.id }});
+    return response.data.result
   }
 )
 

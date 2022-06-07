@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FETCH_FAVORITE, FOLLOW_A_USER, UNFOLLOW_A_USER } from "../api/queries";
+import { FETCH_FAVORITE, UNFOLLOW_A_USER } from "../api/queries";
         
 export const queryFavorites = createAsyncThunk(
     'favorite/fetch',
