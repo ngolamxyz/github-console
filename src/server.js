@@ -1,5 +1,5 @@
 import App from './App';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import express from 'express';
@@ -17,9 +17,11 @@ import createEmotionServer from '@emotion/server/create-instance';
 import theme from './theme'
 import getErrorPage from './ErrorPage';
 
-let passport = require('passport');
-let session = require('express-session');
-let GitHubStrategy = require('passport-github2').Strategy;
+const path = require('path')
+const passport = require('passport');
+const session = require('express-session');
+const SQLiteStore = require('connect-sqlite3')(session);
+const GitHubStrategy = require('passport-github2').Strategy;
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
@@ -160,9 +162,14 @@ passport.use(new GitHubStrategy({
   }
 ));
 
-server.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 server.use(passport.initialize());
-server.use(passport.session());
+server.use(session({
+  secret: process.env.SESSION_SECRET_KEY,
+  resave: false,
+  saveUninitialized: false,
+  store: new SQLiteStore({ db: 'sessions.db', dir: '/var/db' })
+}));
+server.use(passport.authenticate('session'));
 
 server.get('/', ensureAuthenticated)
 
