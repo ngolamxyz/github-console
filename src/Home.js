@@ -68,7 +68,7 @@ export default function Home() {
       </Stack>
       { users.search_query
         &&<Box sx={{display: "flex", justifyContent: "center", paddingBottom: "10px"}}>
-        <Pagination count={numberOfPages} variant="outlined" shape="rounded" onChange={handlePaging} page={users.pageNumber}/>
+        <Pagination count={numberOfPages} variant="outlined" shape="rounded" onChange={handlePaging} page={users.pageNumber} color="primary"/>
       </Box> }
       <Footer/>
     </Stack>
