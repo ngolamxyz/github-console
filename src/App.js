@@ -15,10 +15,13 @@ import '@fontsource/jost/600.css';
 import '@fontsource/jost/700.css';
 import '@fontsource/jost/800.css';
 import '@fontsource/jost/900.css';
+import PageNotFound from './components/PageNotFound';
 
 
 const App = () => (
-  <Container maxWidth="md">
+  <Container maxWidth="md" sx={{
+    height: "100vh"
+  }}>
     <Switch>
       <Route exact path="/">
         <Home/>
@@ -28,6 +31,9 @@ const App = () => (
       </Route>
       <Route path="/users/:username">
         <UserDetail/>
+      </Route>
+      <Route path='*'>
+        <PageNotFound/>
       </Route>
     </Switch>
   </Container>

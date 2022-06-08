@@ -6,5 +6,5 @@ export const render = (req, res) => {
 };
 
 export const routes = () => {
-  return ['/', '/about'];
+  return ['/', '/liked', '/users/:username/:category'];
 };

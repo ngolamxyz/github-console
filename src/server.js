@@ -15,6 +15,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import createEmotionCache from './utils/createEmotionCache';
 import createEmotionServer from '@emotion/server/create-instance';
 import theme from './theme'
+import getErrorPage from './ErrorPage';
 
 let passport = require('passport');
 let session = require('express-session');
@@ -68,7 +69,13 @@ export const renderApp = async (req, res, next) => {
     if (match) promises.push(route.initializeState(match, req));
     return match;
   });
-  const [ preloadedState ] = await Promise.all(promises);
+  let preloadedState;
+  try {
+    [ preloadedState ] = await Promise.all(promises);
+  } catch(err) {
+     throw err
+  }
+
   const store = configureStore({
     reducer: combineReducers({
       users: usersReducer,
@@ -104,7 +111,7 @@ export const renderApp = async (req, res, next) => {
   <head>
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta charset="utf-8" />
-      <title>Welcome to Razzle</title>
+      <title>Github Console</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       ${cssLinksFromAssets(assets, 'client')}
       ${emotionCss}
@@ -171,14 +178,22 @@ server.get('/auth/github/callback',
     res.redirect(url);
   });
 
-server.get('/*', ensureAuthenticated, async (req, res) => {
-    const { context, html} = await renderApp(req, res);
-    if (context.url) {
-      res.redirect(context.url);
-    } else {
-      res.status(200).send(html);
+server.get('/*', ensureAuthenticated, async (req, res, next) => {
+    try {
+      const { context, html} = await renderApp(req, res, next);
+      if (context.url) {
+        res.redirect(context.url);
+      } else {
+        res.status(200).send(html);
+      }
+    } catch(err) {
+      return next(err)
     }
   });
+
+server.use((err, req, res, next) => {
+  res.status(500).send(getErrorPage(err.message));
+})
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }

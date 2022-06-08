@@ -8,6 +8,7 @@ import Following from "./Following"
 import Header from "./Header"
 import Repositories from "./Repositories"
 import { UserProfile } from "./UserProfile"
+import PageNotFound from "./PageNotFound"
 
 
 const Div = styled.div`
@@ -71,6 +72,9 @@ export default function UserDetail() {
             <Route path={`${path}/repositories`} exact render={() => <Repositories username={username}/>}/>
             <Route path={`${path}/followers`} exact component={() => <Followers username={username}/>}/>
             <Route path={`${path}/following`} exact component={() => <Following username={username}/>}/>
+            <Route path='*'>
+                <PageNotFound/>
+            </Route>
         </Switch>
         </Div>
     )
