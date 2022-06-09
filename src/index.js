@@ -1,5 +1,4 @@
 import express from 'express';
-require('dotenv').config();
 let app = require('./server').default;
 
 if (module.hot) {
@@ -12,6 +11,10 @@ if (module.hot) {
     }
   });
   console.info('✅  Server-side HMR Enabled!');
+}
+
+if (process.env.NODE_ENV !== production) {
+  require('dotenv').config();
 }
 
 const port = process.env.PORT || 3000;
