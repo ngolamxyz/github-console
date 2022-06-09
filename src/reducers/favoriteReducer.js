@@ -5,7 +5,7 @@ export const queryFavorites = createAsyncThunk(
     'favorite/fetch',
     async () => {
         const variables = { login: profile.username }
-        const response = await graphql.query({ query: FETCH_FAVORITE, variables });
+        const response = await graphql.query({ query: FETCH_FAVORITE, variables }, fetchPolicy: "no-cache");
         return response.data.user.following
     }
 )
