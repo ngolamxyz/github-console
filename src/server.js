@@ -140,7 +140,7 @@ export const renderApp = async (req, res, next) => {
 const server = express();
 server
   .disable('x-powered-by')
-  .enable("trust proxy");
+  .enable("trust proxy")
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
 
 passport.serializeUser(function(user, done) {
@@ -154,7 +154,8 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL,
+    callbackURL: '/auth/github/callback',
+    proxy: true
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
