@@ -24,7 +24,13 @@ A web application helps to explore and following users, their repositories.
 5. Run `yarn start` to start in dev mode.
 6. For production
    - Run `yarn build`
-   - Run `NODE_ENV=production GITHUB_CLIENT_ID=<your-client-id> GITHUB_CLIENT_SECRET=<your-client-secret> SESSION_SECRET_KEY=<your-secret-key> node build/server.js`
+   - Run
+    ```
+    NODE_ENV=production\
+    GITHUB_CLIENT_ID=<your-client-id>\
+    GITHUB_CLIENT_SECRET=<your-client-secret>\
+    SESSION_SECRET_KEY=<your-secret-key> node build/server.js
+    ```
 
 7. You can use docker
   - Run `sudo docker build -t github-console .`
