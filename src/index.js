@@ -13,7 +13,7 @@ if (module.hot) {
   console.info('✅  Server-side HMR Enabled!');
 }
 
-if (process.env.NODE_ENV !== production) {
+if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
