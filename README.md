@@ -19,7 +19,7 @@ A web application helps to explore and following users, their repositories.
     Authorization callback URL: http://127.0.0.1:3000/auth/github/callback
     - Copy client id and client secret and put in .env 
 2. Put a random [SESSION_SECRET_KEY] in .env
-3. Create a file `/var/db/sessions.db` and provide permissions for saving app's sessions.
+3. Create a folder `/var/db` and provide permissions for saving app's sessions.
 4. Run `yarn install` to install dependencies.
 5. Run `yarn start` to start in dev mode.
 6. For production
