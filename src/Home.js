@@ -34,6 +34,11 @@ export default function Home() {
       dispatch(queryUsers(pageNumber))
   }
 
+  useEffect(() => {
+      dispatch(queryUsers())
+  }, [])
+
+
   return (
     <Stack maxWidth="md" height={'100vh'}>
       <Stack>
