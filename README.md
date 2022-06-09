@@ -33,13 +33,14 @@ A web application helps to explore and following users, their repositories.
     ```
 
 7. You can use docker
-  - Run `sudo docker build -t github-console .`
+  - Run build `sudo docker build -t github-console .`
+  - Or pull the image [here](https://hub.docker.com/repository/docker/ngolam/github-console)
   - Run 
     ```
     sudo docker run -dp 3000:3000 -v "/var/db:/var/db"\
         -e GITHUB_CLIENT_ID=<your-client-id>\
         -e GITHUB_CLIENT_SECRET=<your-client-secret>\
-        -e SESSION_SECRET_KEY=<your-secret-key> github-console\
+        -e SESSION_SECRET_KEY=<your-secret-key> github-console
     ```
 ---
 ## Reference
