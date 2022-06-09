@@ -29,8 +29,10 @@ A web application helps to explore and following users, their repositories.
     NODE_ENV=production\
     GITHUB_CLIENT_ID=<your-client-id>\
     GITHUB_CLIENT_SECRET=<your-client-secret>\
+    CALLBACK_URL=<your-domain-name>\
     SESSION_SECRET_KEY=<your-secret-key> node build/server.js
     ```
+    - Update your domain name in github OAuth app's configuration.
 
 7. You can use docker
   - Run build `sudo docker build -t github-console .`
@@ -40,8 +42,10 @@ A web application helps to explore and following users, their repositories.
     sudo docker run -dp 3000:3000 -v "/var/db:/var/db"\
         -e GITHUB_CLIENT_ID=<your-client-id>\
         -e GITHUB_CLIENT_SECRET=<your-client-secret>\
+        -e CALLBACK_URL=<your-domain-name>\
         -e SESSION_SECRET_KEY=<your-secret-key> github-console
     ```
+    - Update your domain name in github OAuth app's configuration.
 ---
 ## Reference
 - [Github Console](https://github-console.ngolam.xyz)
