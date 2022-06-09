@@ -140,6 +140,7 @@ export const renderApp = async (req, res, next) => {
 const server = express();
 server
   .disable('x-powered-by')
+  .enable("trust proxy");
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
 
 passport.serializeUser(function(user, done) {
