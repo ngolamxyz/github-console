@@ -4,7 +4,7 @@ import { FOLLOWERS_DETAILS, FOLLOWINGS_DETAILS, FOLLOW_A_USER, REPO_DETAILS, UNF
 export const queryUserDetail = createAsyncThunk(
     'userDetail/fetch',
     async (login) => {
-        const response = await graphql.query({ query: USER_DETAILS, variables: { login } });
+        const response = await graphql.query({ query: USER_DETAILS, variables: { login }, fetchPolicy: "no-cache" });
         return response.data.user
     }
 )
@@ -12,7 +12,7 @@ export const queryUserDetail = createAsyncThunk(
 export const queryRepos = createAsyncThunk(
     'userDetail/fetchRepos',
     async (login) => {
-        const response = await graphql.query({ query: REPO_DETAILS, variables: { login } });
+        const response = await graphql.query({ query: REPO_DETAILS, variables: { login }, fetchPolicy: "no-cache" });
         return response.data.user.repositories
     }
 )
@@ -20,7 +20,7 @@ export const queryRepos = createAsyncThunk(
 export const queryNextPageRepos = createAsyncThunk(
     'userDetail/fetchNextPageRepos',
     async ({ login, after}) => {
-        const response = await graphql.query({ query: REPO_DETAILS, variables: { login, after }});
+        const response = await graphql.query({ query: REPO_DETAILS, variables: { login, after }, fetchPolicy: "no-cache"});
         return response.data.user.repositories
     }
 )
@@ -28,7 +28,7 @@ export const queryNextPageRepos = createAsyncThunk(
 export const queryFollowers = createAsyncThunk(
     'userDetail/fetchFollowers',
     async ({ login, after}) => {
-        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }});
+        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }, fetchPolicy: "no-cache"});
         return response.data.user.followers
     }
 )
@@ -36,7 +36,7 @@ export const queryFollowers = createAsyncThunk(
 export const queryNextPageFollowers = createAsyncThunk(
     'userDetail/fetchNextPageFollowers',
     async ({ login, after}) => {
-        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }});
+        const response = await graphql.query({ query: FOLLOWERS_DETAILS, variables: { login, after }, fetchPolicy: "no-cache"});
         return response.data.user.followers
     }
 )
@@ -44,7 +44,7 @@ export const queryNextPageFollowers = createAsyncThunk(
 export const queryFollowings = createAsyncThunk(
     'userDetail/fetchFollowings',
     async (login) => {
-        const response = await graphql.query({ query: FOLLOWINGS_DETAILS, variables: { login } });
+        const response = await graphql.query({ query: FOLLOWINGS_DETAILS, variables: { login }, fetchPolicy: "no-cache" });
         return response.data.user.following
     }
 )
@@ -52,7 +52,7 @@ export const queryFollowings = createAsyncThunk(
 export const queryNextPageFollowing = createAsyncThunk(
     'userDetail/fetchNextPageFollowings',
     async ({login, after}) => {
-        const response = await graphql.query({ query: FOLLOWINGS_DETAILS, variables: { login, after } });
+        const response = await graphql.query({ query: FOLLOWINGS_DETAILS, variables: { login, after }, fetchPolicy: "no-cache" });
         return response.data.user.following
     }
 )

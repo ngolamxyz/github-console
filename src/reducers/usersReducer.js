@@ -18,7 +18,7 @@ export const queryUsers = createAsyncThunk(
     }
     let response;
     try {
-      response = await graphql.query({ query: FETCH_USERS, variables: { query, after: cursor }});
+      response = await graphql.query({ query: FETCH_USERS, variables: { query, after: cursor }, fetchPolicy: "no-cache"});
     } catch(err) {
       console.log("APP.ERRR: ", err)
       return initialState;
