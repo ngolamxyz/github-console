@@ -154,7 +154,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: '/auth/github/callback',
+    callbackURL: process.env.CALLBACK_URL,
     proxy: true
   },
   function(accessToken, refreshToken, profile, done) {
